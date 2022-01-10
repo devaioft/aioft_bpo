@@ -1,4 +1,6 @@
 import 'package:aioft_bpo/Screens/home_screen.dart';
+import 'package:aioft_bpo/Screens/onboarding.screen.dart';
+import 'package:aioft_bpo/Screens/temp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -35,6 +37,7 @@ class MyApp extends StatelessWidget {
           //     AppLocalizations.of(context)!.appTitle,
 
           theme: ThemeData(
+            fontFamily: 'RobotoMono-bold',
             primarySwatch: Colors.green,
             appBarTheme: const AppBarTheme(elevation: 1),
             popupMenuTheme: PopupMenuThemeData(
@@ -53,9 +56,13 @@ class MyApp extends StatelessWidget {
                 switch (routeSettings.name) {
                   case SettingsView.routeName:
                     return SettingsView(controller: settingsController);
-                  case HomeScreen.routeName:
+                  // case HomeScreen.routeName:
+                  // case HomeScreen.routeName:
+                  //  return  const HomeScreen();
+
+                  case OnBoardingPage.routeName: 
                   default:
-                    return const HomeScreen();
+                    return const  OnBoardingPage();
                 }
               },
             );

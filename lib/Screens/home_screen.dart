@@ -1,9 +1,13 @@
 import 'package:aioft_bpo/Models/driver_model.dart';
 import 'package:aioft_bpo/Models/popup_menu_model.dart';
 import 'package:aioft_bpo/Services/api.dart';
+import 'package:aioft_bpo/Services/preferences.dart';
+import 'package:aioft_bpo/Widgets/dialog_body.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:aioft_bpo/src/settings/settings_view.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,22 +23,36 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<List<Drivers>>? _driversFuture;
   final CallApi _callApi = CallApi();
   String _value = "";
-  final List<PopupItem> _list =[
-  PopupItem(value: 'Fleet', child:const  Text("Owned List")),
-    PopupItem(value: 'Owned', child: const  Text("Fleet List")),
-    PopupItem(value: '', child: const  Text("Show All List")),
+  final List<PopupItem> _list = [
+    PopupItem(value: 'Fleet', child: const Text("Owned List")),
+    PopupItem(value: 'Owned', child: const Text("Fleet List")),
+    PopupItem(value: '', child: const Text("Show All List")),
   ];
+  final _prefs = PreferecesServices();
+  var _agentPhoneNumber;
 
   @override
   void initState() {
     super.initState();
+
     _driversFuture = _callApi.fetchDriver('/taxeelist');
+  }
+
+  populatesField() async {
+    final setting = await _prefs.getData();
+    setState(() {
+      _agentPhoneNumber = setting.phoneNumber!;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    populatesField();
     var appBar = AppBar(
-      title: const Text("DriverList"),
+      title: const Text(
+        "DriverList",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
       actions: [
         IconButton(
           onPressed: () =>
@@ -59,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ).toList();
           },
-        )
+        ),
       ],
     );
     return Scaffold(
@@ -73,43 +91,54 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             } else if (snapshot.hasData) {
               return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    final driver = snapshot.data![index];
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final driver = snapshot.data![index];
 
-                    if (snapshot.data![index].carType == _value) {
-                      return const Visibility(
-                        visible: false,
-                        maintainState: true,
-                        maintainAnimation: true,
-                        maintainSize: false,
-                        child: Text("data"),
-                      );
-                    } else {
-                      return Card(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 3, vertical: 3),
-                        elevation: 0.8,
-                        child: ListTile(
-                          title: DriverNameWdget(driver: driver),
-                          subtitle: Row(
+                  if (snapshot.data![index].carType == _value) {
+                    return const Visibility(
+                      visible: false,
+                      maintainState: true,
+                      maintainAnimation: true,
+                      maintainSize: false,
+                      child: Text("data"),
+                    );
+                  } else {
+                    return Card(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 1, vertical: 2),
+                      elevation: 0.8,
+                      child: ListTile(
+                        onTap: () => _showDialog(driver),
+                        title: DriverNameWdget(driver: driver),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(bottom: 6),
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(left: 8),
-                                child: Text('${driver.cityName}'),
+                                child: Text(
+                                  '${driver.cityName}',
+                                  style: kCityTextStyle,
+                                ),
                               ),
-                              Text("${driver.carType}")
+                              Text("${driver.carType}"),
                             ],
                           ),
-                          trailing: OutlinedButton(
-                            onPressed: () => {bottomSheet(context, driver)},
-                            child: const Icon(Icons.call, color: Colors.green),
-                          ),
                         ),
-                      );
-                    }
-                  });
+                        trailing: OutlinedButton(
+                          onPressed: () {
+                            // bottomSheet(context, driver);
+                            showAwesomeDialog(context, driver);
+                          },
+                          child: const Icon(Icons.call, color: Colors.green),
+                        ),
+                      ),
+                    );
+                  }
+                },
+              );
             } else {
               return const Center(child: CircularProgressIndicator());
             }
@@ -117,42 +146,82 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<void> bottomSheet(BuildContext context, Drivers drivers) {
-    return showModalBottomSheet<void>(
-      backgroundColor: Colors.transparent,
+  void _showDialog(Drivers drivers) {
+    showDialog(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
-        ),
-      ),
       builder: (BuildContext context) {
-        return Container(
-          height: 130,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              BottomSheetButton(
-                btnTitle: 'Call ${drivers.firstName}',
-                primaryColor: Colors.green,
-                onPressed: () => {_callNumber(drivers.phoneNumber!)},
-              ),
-              BottomSheetButton(
-                btnTitle: 'Cancel',
-                primaryColor: Colors.greenAccent,
-                onPressed: () => Navigator.pop(context),
-              )
-            ],
+        return AlertDialog(
+          content: SizedBox(
+            height: 100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: Text('DriverID : ${drivers.id}')),
+                Expanded(
+                    child: Text(
+                        'Fullname : ${drivers.firstName} ${drivers.lastName}')),
+                Expanded(child: Text('Cityname : ${drivers.cityName}')),
+                Text('Cartype  : ${drivers.carType}'),
+              ],
+            ),
           ),
+          actions: [],
         );
       },
     );
   }
 
+  AwesomeDialog showAwesomeDialog(BuildContext context, Drivers driver) {
+    return AwesomeDialog(
+      context: context,
+      animType: AnimType.TOPSLIDE,
+      dialogType: DialogType.SUCCES,
+      body: DialogBodyWidget(
+        dialogTitle: '${driver.firstName} ${driver.lastName}',
+        // dialogDesc: '${driver.firstName}'
+      ),
+      btnOkOnPress: () {
+        var data = {
+          'agent_number': _agentPhoneNumber,
+          'destination_number': driver.phoneNumber,
+        };
+        CallApi().postDataIntoTataTelecomeApi(data, '/click_to_call');
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+            ),
+            elevation: 10,
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 10),
+            content: Container(
+              height: 150,
+              child: const Center(
+                child: Text(
+                  'Connecting...\n\nPlease Wait For Few Second Agent Will Get a Call.',
+                  style: TextStyle(
+                    fontSize: 21,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      btnOkText: 'Connect',
+      btnCancelOnPress: () {},
+    )..show();
+  }
+
   _callNumber(String driverNumber) async {
     var number = driverNumber; //set the number here
     bool? res = await FlutterPhoneDirectCaller.callNumber(number);
+    Navigator.pop(context);
   }
 }
 
@@ -190,8 +259,6 @@ class BottomSheetButton extends StatelessWidget {
     );
   }
 }
-
-
 
 class DriverNameWdget extends StatelessWidget {
   const DriverNameWdget({

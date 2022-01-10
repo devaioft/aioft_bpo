@@ -1,7 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 const kDriverNameStyle = TextStyle(
-  fontSize: 16.0,
+  fontSize: 16.5,
   fontWeight: FontWeight.bold,
+);
+
+const kCityTextStyle = TextStyle(
+  fontWeight: FontWeight.bold,
+  fontSize: 13.0,
 );
