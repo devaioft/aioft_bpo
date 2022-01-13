@@ -1,8 +1,5 @@
-import 'package:aioft_bpo/Services/preferences.dart';
-import 'package:aioft_bpo/Widgets/message.dart';
 import 'package:flutter/material.dart';
 import 'settings_controller.dart';
-
 class SettingsView extends StatefulWidget {
   const SettingsView({Key? key, required this.controller}) : super(key: key);
 
@@ -13,25 +10,7 @@ class SettingsView extends StatefulWidget {
   @override
   State<SettingsView> createState() => _SettingsViewState();
 }
-
 class _SettingsViewState extends State<SettingsView> {
-  final _formKey = GlobalKey<FormState>();
-
-  final _phoneController = TextEditingController();
-  final _prefs = PreferecesServices();
-  @override
-  void initState() {
-    super.initState();
-    populatesField();
-  }
-
-  populatesField() async {
-    final setting = await _prefs.getData();
-    setState(() {
-      _phoneController.text = setting.phoneNumber!;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,54 +47,6 @@ class _SettingsViewState extends State<SettingsView> {
                     ],
                   ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _phoneController,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter agent mobile number',
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.phone,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter agent mobile number';
-                      }
-                      if(value.length<10){
-                        return 'Please enter valid agent mobile number';
-                      }
-                      return null;
-                    },
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  final newSetting =
-                      Settings(phoneNumber: _phoneController.text);
-                  setState(() {
-                    _prefs.setData(newSetting);
-                  });
-                  Message(context, 'Updated Succesfully!');
-                }
-              },
-              child: const Text(
-                'Submit',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(16),
               ),
             ),
           ],

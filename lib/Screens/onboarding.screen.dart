@@ -1,4 +1,5 @@
-import 'package:aioft_bpo/Screens/home_screen.dart';
+import 'package:aioft_bpo/Screens/dashboard.dart';
+import 'package:aioft_bpo/Screens/providers_screen.dart';
 import 'package:aioft_bpo/Widgets/button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
@@ -68,7 +69,7 @@ class OnBoardingPage extends StatelessWidget {
       );
 
   void goToHome(context) => Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const DashBoardScreen()),
       );
 
   Widget buildImage(String path) =>

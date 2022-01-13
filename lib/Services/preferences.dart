@@ -1,20 +1,20 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferecesServices {
-  setData(Settings setting) async {
+  setData(Profile setting) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     await prefs.setString('phone', setting.phoneNumber!);
   }
 
-  Future<Settings> getData() async {
+  Future<Profile> getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final phoneNumber = prefs.getString('phone');
-    return Settings(phoneNumber: phoneNumber);
+    return Profile(phoneNumber: phoneNumber);
   }
 }
 
-class Settings {
+class Profile {
   String? phoneNumber;
-  Settings({this.phoneNumber});
+  Profile({this.phoneNumber});
 }

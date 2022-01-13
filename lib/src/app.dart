@@ -1,6 +1,6 @@
-import 'package:aioft_bpo/Screens/home_screen.dart';
+import 'package:aioft_bpo/Screens/dashboard.dart';
 import 'package:aioft_bpo/Screens/onboarding.screen.dart';
-import 'package:aioft_bpo/Screens/temp.dart';
+import 'package:aioft_bpo/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -37,14 +37,12 @@ class MyApp extends StatelessWidget {
           //     AppLocalizations.of(context)!.appTitle,
 
           theme: ThemeData(
-            fontFamily: 'RobotoMono-bold',
-            primarySwatch: Colors.green,
-            appBarTheme: const AppBarTheme(elevation: 1),
-            popupMenuTheme: PopupMenuThemeData(
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+            primaryColor: kPrimaryColor,
+            // fontFamily: 'RobotoMono-bold',
+            appBarTheme: const AppBarTheme(
+              elevation: 1,
+              backgroundColor: kBtnColor,
+              foregroundColor: kCardColor,
             ),
           ),
           darkTheme: ThemeData.dark(),
@@ -56,13 +54,9 @@ class MyApp extends StatelessWidget {
                 switch (routeSettings.name) {
                   case SettingsView.routeName:
                     return SettingsView(controller: settingsController);
-                  // case HomeScreen.routeName:
-                  // case HomeScreen.routeName:
-                  //  return  const HomeScreen();
-
-                  case OnBoardingPage.routeName: 
+                  case OnBoardingPage.routeName:
                   default:
-                    return const  OnBoardingPage();
+                    return const DashBoardScreen();
                 }
               },
             );

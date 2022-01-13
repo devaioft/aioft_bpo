@@ -1,16 +1,32 @@
-import 'package:aioft_bpo/Models/driver_model.dart';
+import 'package:aioft_bpo/Models/fleet_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:aioft_bpo/Models/provider_model.dart';
 
 class CallApi {
-  final baseUrl = 'http://3.108.3.83/api';
-  Future<List<Drivers>> fetchDriver(String endsPoint) async {
+  final baseUrl = 'https://taxyee.aioft.com/api/provider';
+  Future<List<Providers>> fetchProviders(String endsPoint) async {
     var fullUrl = baseUrl + endsPoint;
-
-    var response = await http.get(Uri.parse(fullUrl));
-
-    return driversFromJson(response.body);
+    var token =
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjE4OCwiaXNzIjoiaHR0cHM6Ly90YXh5ZWUuYWlvZnQuY29tL2FwaS9wcm92aWRlci9vYXV0aC90b2tlbiIsImlhdCI6MTY0MTgxNTYwNCwiZXhwIjoxNjQyMTc1NjA0LCJuYmYiOjE2NDE4MTU2MDQsImp0aSI6InZ4a01UbTNxYUNwak1QVW0ifQ.lgK_Y--td68kdaVlqoO0IOOUVAG_uIqe_gbEkv6iPyA';
+    var response = await http.get(
+      Uri.parse(fullUrl),
+      headers: {'Authorization': 'Bearer $token', 'Accept': "Application/json"},
+    );
+    return providersFromJson(response.body);
   }
 
+Future<List<FleetUser>> fetchFleetUsers(String endsPoint) async {
+    var fullUrl = baseUrl + endsPoint;
+    var token =
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjE4OCwiaXNzIjoiaHR0cHM6Ly90YXh5ZWUuYWlvZnQuY29tL2FwaS9wcm92aWRlci9vYXV0aC90b2tlbiIsImlhdCI6MTY0MTgxNTYwNCwiZXhwIjoxNjQyMTc1NjA0LCJuYmYiOjE2NDE4MTU2MDQsImp0aSI6InZ4a01UbTNxYUNwak1QVW0ifQ.lgK_Y--td68kdaVlqoO0IOOUVAG_uIqe_gbEkv6iPyA';
+    var response = await http.get(
+      Uri.parse(fullUrl),
+      headers: {'Authorization': 'Bearer $token', 'Accept': "Application/json"},
+    );
+    return fleetUserFromJson(response.body);
+  }
+
+//Tatatelecome Api
   postDataIntoTataTelecomeApi(data, apiEndPoints) async {
     final tataBaseURl =
         "https://api-smartflo.tatateleservices.com/v1" + apiEndPoints;
