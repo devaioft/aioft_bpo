@@ -1,5 +1,7 @@
 import 'package:aioft_bpo/Screens/dashboard.dart';
+import 'package:aioft_bpo/Screens/fleet_screen.dart';
 import 'package:aioft_bpo/Screens/onboarding.screen.dart';
+import 'package:aioft_bpo/Screens/providers_screen.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -38,7 +40,7 @@ class MyApp extends StatelessWidget {
 
           theme: ThemeData(
             primaryColor: kPrimaryColor,
-            // fontFamily: 'RobotoMono-bold',
+            fontFamily: 'Nunito-Bold',
             appBarTheme: const AppBarTheme(
               elevation: 1,
               backgroundColor: kBtnColor,
@@ -54,9 +56,12 @@ class MyApp extends StatelessWidget {
                 switch (routeSettings.name) {
                   case SettingsView.routeName:
                     return SettingsView(controller: settingsController);
-                  case OnBoardingPage.routeName:
+                  case ProviderScreen.routeName:
+                    return const ProviderScreen();
+                  case FleetScreen.routeName:
+                    return const FleetScreen();
                   default:
-                    return const DashBoardScreen();
+                    return const OnBoardingPage();
                 }
               },
             );

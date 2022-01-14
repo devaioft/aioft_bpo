@@ -3,6 +3,7 @@ import 'package:aioft_bpo/Services/api.dart';
 import 'package:aioft_bpo/Services/preferences.dart';
 import 'package:aioft_bpo/Widgets/dialog_body.dart';
 import 'package:aioft_bpo/Widgets/message.dart';
+import 'package:aioft_bpo/Widgets/user_count_widget.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class _FleetScreenState extends State<FleetScreen> {
   final CallApi _callApi = CallApi();
   final _prefs = PreferecesServices();
   var _agentPhoneNumber;
+  int? userLength;
 
   @override
   void initState() {
@@ -32,7 +34,7 @@ class _FleetScreenState extends State<FleetScreen> {
   populatesField() async {
     final newAgent = await _prefs.getData();
     setState(() {
-      _agentPhoneNumber = newAgent.phoneNumber!;
+      _agentPhoneNumber = newAgent.phoneNumber??'';
     });
   }
 
@@ -41,7 +43,8 @@ class _FleetScreenState extends State<FleetScreen> {
     populatesField();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("FleetUser"),
+        title: const Text("Fleet Users"),
+        actions: [UserCountWidget(userLength: userLength)],
       ),
       body: FutureBuilder<List<FleetUser>>(
           future: _fleetUserFuture,
@@ -51,6 +54,7 @@ class _FleetScreenState extends State<FleetScreen> {
                 child: Text("${snapshot.error}"),
               );
             } else if (snapshot.hasData) {
+              userLength = snapshot.data!.length;
               return ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {

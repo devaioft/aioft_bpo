@@ -1,3 +1,4 @@
+import 'package:aioft_bpo/constant.dart';
 import 'package:flutter/material.dart';
 
 class ButtonWidget extends StatelessWidget {
@@ -11,14 +12,24 @@ class ButtonWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => RaisedButton(
-        onPressed: onClicked,
-        color: Theme.of(context).primaryColor,
-        shape: StadiumBorder(),
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Text(
-          text,
-          style: TextStyle(color: Colors.white, fontSize: 16),
+  Widget build(BuildContext context) => SizedBox(
+        height: 45,
+        width: 200,
+        child: ElevatedButton(
+          onPressed: onClicked,
+          style: ElevatedButton.styleFrom(
+            primary: kBtnColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),
+          ),
         ),
       );
 }

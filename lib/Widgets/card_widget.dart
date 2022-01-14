@@ -1,25 +1,24 @@
-
-import 'package:aioft_bpo/Screens/fleet_screen.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:flutter/material.dart';
 
-class FleetCardWidget extends StatelessWidget {
-  const FleetCardWidget({
+class CardWidget extends StatelessWidget {
+  const CardWidget({
     Key? key,
     this.imageSrc,
     this.cardTitle,
+    this.onTap,
   }) : super(key: key);
 
   final String? imageSrc;
   final String? cardTitle;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const FleetScreen())),
+      onTap: onTap,
       child: Container(
-        height: 170,
+        height: 150,
         decoration: BoxDecoration(
           color: kCardColor,
           borderRadius: BorderRadius.circular(12),
@@ -29,7 +28,7 @@ class FleetCardWidget extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(
-                  height: 90,
+                  height: 75,
                   child: Image.asset(
                     imageSrc!,
                     color: kBtnColor,

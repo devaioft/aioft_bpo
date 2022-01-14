@@ -41,9 +41,9 @@ flutter:
     # Add assets from the images directory to the application.
     - assets/images/
   fonts:
-    - family: OpenSans
+    - family: Nunito-Bold
       fonts:
-        - asset: fonts/OpenSans.ttf
+        - asset: fonts/Nunito-Bold.ttf
     - family: RobotoMono
       fonts:
         - asset: fonts/RobotoMono.ttf

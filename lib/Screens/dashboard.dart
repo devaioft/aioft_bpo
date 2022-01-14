@@ -17,7 +17,7 @@ class DashBoardScreen extends StatefulWidget {
 class _DashBoardScreenState extends State<DashBoardScreen>
     with TickerProviderStateMixin {
   int _selectedIndex = 0;
-  final List<Widget> _widgetOptions = <Widget>[
+  final List<Widget> _screens = <Widget>[
     const HomeScreen(),
     const ProfileScreen(),
   ];
@@ -29,37 +29,56 @@ class _DashBoardScreenState extends State<DashBoardScreen>
     });
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      bottomNavigationBar: SizedBox(
-        height: 70,
-        child: bottomNavigations(),
-      ),
+      bottomNavigationBar: bottomNavigationbar(),
       body: Container(
         padding: const EdgeInsets.only(top: 40),
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: _screens[_selectedIndex],
       ),
     );
   }
 
-  BottomNavigationBar bottomNavigations() {
-    return BottomNavigationBar(
-      backgroundColor: kCardColor,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.person_outline,
-            size: 32,
+  NavigationBarTheme bottomNavigationbar() {
+    return NavigationBarTheme(
+      data: NavigationBarThemeData(
+        indicatorColor: kIconEnabledColor,
+        iconTheme: MaterialStateProperty.all(
+          const IconThemeData(
+            color: kBtnColor,
+            opacity: 0.7,
           ),
-          label: 'Profile',
         ),
-      ],
-      currentIndex: _selectedIndex,
-      selectedItemColor: kBtnColor,
-      unselectedItemColor: kIconTextColor,
-      onTap: _onItemTapped,
+        labelTextStyle: MaterialStateProperty.all(
+          const TextStyle(
+            fontSize: 15,
+            color: kTextColor,
+          ),
+        ),
+      ),
+      child: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _onItemTapped,
+        height: 70,
+        backgroundColor: kCardColor,
+        animationDuration: const Duration(seconds: 1),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(
+              Icons.person_outline,
+              size: 28,
+            ),
+            selectedIcon: Icon(
+              Icons.person,
+              size: 28,
+            ),
+            label: 'Profile',
+          ),
+        ],
+      ),
     );
   }
 

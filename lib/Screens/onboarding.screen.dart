@@ -1,6 +1,7 @@
 import 'package:aioft_bpo/Screens/dashboard.dart';
-import 'package:aioft_bpo/Screens/providers_screen.dart';
+import 'package:aioft_bpo/Screens/profile_screen.dart';
 import 'package:aioft_bpo/Widgets/button_widget.dart';
+import 'package:aioft_bpo/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
@@ -12,72 +13,69 @@ class OnBoardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SafeArea(
         child: IntroductionScreen(
+          globalBackgroundColor: kCardColor,
           pages: [
             PageViewModel(
-              title: 'A reader lives a thousand lives',
-              body: 'The man who never reads lives only one.',
-              image: buildImage('assets/images/1.png'),
+              title: 'Customer service is an Opportunity ',
+              body: 'To exceed your customer’s expectations.',
+              image: buildImage('assets/images/banner.png'),
               decoration: getPageDecoration(),
             ),
             PageViewModel(
-              title: 'Featured Books',
-              body: 'Available right at your fingerprints',
-              image: buildImage('assets/images/2.png'),
+              title: 'People will forget what you said.',
+              body:
+                  'They will forget what you did. But they will never forget how you made them feel',
+              image: buildImage('assets/images/3.jpg'),
               decoration: getPageDecoration(),
             ),
             PageViewModel(
-              title: 'Simple UI',
-              body: 'For enhanced reading experience',
-              image: buildImage('assets/images/3.png'),
+              title: 'Ask your customer',
+              body:
+                  'To be part of the solution, and don’t view them as part of the problem.',
+              image: buildImage('assets/images/4.jpg'),
               decoration: getPageDecoration(),
             ),
             PageViewModel(
-              title: 'Today a reader, tomorrow a leader',
-              body: 'Start your journey',
+              title: 'People do not care ',
+              body: 'how much you know until they know how much you care',
+              image: buildImage('assets/images/5.png'),
+              decoration: getPageDecoration(),
               footer: ButtonWidget(
-                text: 'Start Reading',
                 onClicked: () => goToHome(context),
+                text: 'Get Started!',
               ),
-              image: buildImage('assets/images/4.png'),
-              decoration: getPageDecoration(),
             ),
           ],
-          done:
-              const Text('Read', style: TextStyle(fontWeight: FontWeight.w600)),
-          onDone: () => goToHome(context),
-          showSkipButton: true,
+          showDoneButton: false,
+          showSkipButton: false,
+          showNextButton: false,
           skip: const Text(
             'Skip',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           onSkip: () => goToHome(context),
-          next: ElevatedButton(
-            onPressed: () {},
-            child: const Icon(Icons.arrow_forward),
-          ),
           dotsDecorator: getDotDecoration(),
-          onChange: (index) => print('Page $index selected'),
-          // globalBackgroundColor: Theme.of(context).primaryColor,
           skipFlex: 0,
           nextFlex: 0,
           // isProgressTap: false,
           // isProgress: false,
-          // showNextButton: false,
           // freeze: true,
           // animationDuration: 1000,
         ),
       );
 
   void goToHome(context) => Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const DashBoardScreen()),
+        MaterialPageRoute(builder: (_) => const ProfileScreen()),
       );
 
-  Widget buildImage(String path) =>
-      Center(child: Image.asset(path, width: 350));
+  Widget buildImage(String path) => Center(
+          child: Image.asset(
+            path,
+          ));
 
   DotsDecorator getDotDecoration() => DotsDecorator(
         color: const Color(0xFFBDBDBD),
-        //activeColor: Colors.orange,
+        activeColor: kBtnColor,
         size: const Size(10, 10),
         activeSize: const Size(22, 10),
         activeShape: RoundedRectangleBorder(
@@ -93,4 +91,29 @@ class OnBoardingPage extends StatelessWidget {
         imagePadding: const EdgeInsets.all(24),
         pageColor: Colors.white,
       );
+}
+
+class DoneWidget extends StatelessWidget {
+  const DoneWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 30,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(40),
+        color: kBtnColor,
+      ),
+      child: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Text('Get Started!',
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: kCardColor,
+            )),
+      ),
+    );
+  }
 }

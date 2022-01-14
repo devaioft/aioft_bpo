@@ -4,6 +4,7 @@ import 'package:aioft_bpo/Services/preferences.dart';
 import 'package:aioft_bpo/Widgets/dialog_body.dart';
 import 'package:aioft_bpo/Widgets/message.dart';
 import 'package:aioft_bpo/Widgets/provider_namewidget.dart';
+import 'package:aioft_bpo/Widgets/user_count_widget.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class _ProviderScreenState extends State<ProviderScreen> {
   final CallApi _callApi = CallApi();
   final _prefs = PreferecesServices();
   var _agentPhoneNumber;
+  int? userLength;
 
   @override
   void initState() {
@@ -32,8 +34,9 @@ class _ProviderScreenState extends State<ProviderScreen> {
 
   populatesField() async {
     final newAgent = await _prefs.getData();
+    
     setState(() {
-      _agentPhoneNumber = newAgent.phoneNumber!;
+      _agentPhoneNumber = newAgent.phoneNumber??'';
     });
   }
 
@@ -43,6 +46,7 @@ class _ProviderScreenState extends State<ProviderScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Providers"),
+        actions: [UserCountWidget(userLength: userLength)],
       ),
       body: FutureBuilder<List<Providers>>(
           future: _providerFuture,
@@ -52,6 +56,8 @@ class _ProviderScreenState extends State<ProviderScreen> {
                 child: Text("${snapshot.error}"),
               );
             } else if (snapshot.hasData) {
+              userLength = snapshot.data!.length;
+
               return ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
