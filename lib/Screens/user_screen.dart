@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aioft_bpo/Models/provider_model.dart';
+import 'package:aioft_bpo/Models/user_model.dart';
 import 'package:aioft_bpo/Screens/RegistrationForm/driver_reg_form.dart';
 import 'package:aioft_bpo/Services/api.dart';
 import 'package:aioft_bpo/Services/preferences.dart';
@@ -12,17 +13,17 @@ import 'package:aioft_bpo/constant.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 
-class ProviderScreen extends StatefulWidget {
-  const ProviderScreen({Key? key}) : super(key: key);
+class UsersScreen extends StatefulWidget {
+  const UsersScreen({Key? key}) : super(key: key);
 
-  static const routeName = '/provider';
+  static const routeName = '/users';
 
   @override
-  _ProviderScreenState createState() => _ProviderScreenState();
+  _UsersScreenState createState() => _UsersScreenState();
 }
 
-class _ProviderScreenState extends State<ProviderScreen> {
-  Future<List<Providers>>? _providerFuture;
+class _UsersScreenState extends State<UsersScreen> {
+  Future<Users>? _usersFuture;
   final CallApi _callApi = CallApi();
   final _prefs = PreferecesServices();
   var _agentPhoneNumber;
@@ -32,7 +33,7 @@ class _ProviderScreenState extends State<ProviderScreen> {
   void initState() {
     super.initState();
 
-    _providerFuture = _callApi.fetchProviders('/providerlists');
+    _usersFuture = _callApi.fetchUsers('/bpolist');
   }
 
   populatesField() async {
@@ -48,49 +49,48 @@ class _ProviderScreenState extends State<ProviderScreen> {
     populatesField();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Providers"),
+        title: const Text("Users"),
         actions: [UserCountWidget(userLength: userLength)],
       ),
-      body: FutureBuilder<List<Providers>>(
-          future: _providerFuture,
+      body: FutureBuilder<Users>(
+          future: _usersFuture,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Center(
                 child: Text("${snapshot.error}"),
               );
             } else if (snapshot.hasData) {
-              userLength = snapshot.data!.length;
+              // userLength = snapshot.data!.length;
 
               return ListView.builder(
-                  itemCount: snapshot.data!.length,
+                  itemCount: snapshot.data!.providers!.length,
                   itemBuilder: (context, index) {
-                    final providers = snapshot.data![index];
+                    final user = snapshot.data!.providers![index];
                     return Card(
                       margin: const EdgeInsets.symmetric(
                           horizontal: 1, vertical: 2),
                       elevation: 0.8,
                       child: ListTile(
-                        title:
-                            ProviderNameWidget(user: providers, index: index),
+                        title: Text(user.firstName.toString()),
                         subtitle: Padding(
                           padding: const EdgeInsets.only(bottom: 6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8),
-                                child: Text(
-                                  '${providers.id}',
-                                  style: kCityTextStyle,
-                                ),
-                              ),
-                              Text("${providers.id}"),
+                              // Padding(
+                              //   padding: const EdgeInsets.only(left: 8),
+                              //   child: Text(
+                              //     '${providers.id}',
+                              //     style: kCityTextStyle,
+                              //   ),
+                              // ),
+                              // Text("${providers.id}"),
                             ],
                           ),
                         ),
                         trailing: OutlinedButton(
                           onPressed: () {
-                            showAwesomeDialog(context, providers, index);
+                            // showAwesomeDialog(context, providers, index);
                           },
                           child: const Icon(Icons.call, color: kBtnColor),
                         ),
@@ -163,10 +163,13 @@ class _ProviderScreenState extends State<ProviderScreen> {
               ),
             );
 
-            Timer(  const Duration(seconds: 5), () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>  UserRegistarationScreen(
-                provider: provider,
-              )));
+            Timer(const Duration(seconds: 5), () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => UserRegistarationScreen(
+                            provider: provider,
+                          )));
             });
           }
         },

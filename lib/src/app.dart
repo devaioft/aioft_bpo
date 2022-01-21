@@ -1,7 +1,9 @@
+import 'package:aioft_bpo/Screens/RegistrationForm/driver_reg_form.dart';
 import 'package:aioft_bpo/Screens/dashboard.dart';
 import 'package:aioft_bpo/Screens/fleet_screen.dart';
 import 'package:aioft_bpo/Screens/onboarding.screen.dart';
 import 'package:aioft_bpo/Screens/providers_screen.dart';
+import 'package:aioft_bpo/Screens/user_screen.dart';
 import 'package:aioft_bpo/Services/preferences.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +46,7 @@ class _MyAppState extends State<MyApp> {
       animation: widget.settingsController,
       builder: (BuildContext context, Widget? child) {
         return MaterialApp(
+          title: 'Aioft BPO',
           debugShowCheckedModeBanner: false,
           restorationScopeId: 'app',
 
@@ -79,12 +82,18 @@ class _MyAppState extends State<MyApp> {
                     return SettingsView(controller: widget.settingsController);
                   case ProviderScreen.routeName:
                     return const ProviderScreen();
+                  case UserRegistarationScreen.routeName:
+                    return const UserRegistarationScreen();
                   case FleetScreen.routeName:
                     return const FleetScreen();
+                  case UsersScreen.routeName:
+                  return const UsersScreen();
                   default:
+                  
                     return _phoneNumber.toString().length < 10
                         ? const OnBoardingPage()
                         : const DashBoardScreen();
+                  // : const DashBoardScreen();
                 }
               },
             );

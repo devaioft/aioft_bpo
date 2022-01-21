@@ -1,5 +1,7 @@
+import 'package:aioft_bpo/Models/user_model.dart';
 import 'package:aioft_bpo/Screens/fleet_screen.dart';
 import 'package:aioft_bpo/Screens/providers_screen.dart';
+import 'package:aioft_bpo/Screens/user_screen.dart';
 import 'package:aioft_bpo/Widgets/card_widget.dart';
 import 'package:aioft_bpo/Widgets/status.dart';
 import 'package:aioft_bpo/constant.dart';
@@ -121,6 +123,28 @@ class HomeScreen extends StatelessWidget {
                     context, FleetScreen.routeName),
               ),
             )
+          ],
+        ),
+        const SizedBox(height: 15),
+        Row(
+          children: [
+            Expanded(
+              child: CardWidget(
+                cardTitle: 'Users',
+                imageSrc: 'assets/images/tech.png',
+                onTap: () => Navigator.restorablePushNamed(
+                    context, UsersScreen.routeName),
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Expanded(
+            //   child: CardWidget(
+            //     cardTitle: 'Employee',
+            //     imageSrc: 'assets/images/emp.png',
+            //     onTap: () => Navigator.restorablePushNamed(
+            //         context, FleetScreen.routeName),
+            //   ),
+            // )
           ],
         ),
         const SizedBox(height: 15),
