@@ -4,10 +4,11 @@ import 'package:aioft_bpo/Models/provider_model.dart';
 
 class CallApi {
   final baseUrl = 'https://taxyee.aioft.com/api/provider';
+   final token =
+        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjE4OCwiaXNzIjoiaHR0cHM6Ly90YXh5ZWUuYWlvZnQuY29tL2FwaS9wcm92aWRlci9vYXV0aC90b2tlbiIsImlhdCI6MTY0MjM5OTcwOSwiZXhwIjoxNjQyNzU5NzA5LCJuYmYiOjE2NDIzOTk3MDksImp0aSI6IlczVVNZalppZXhVcUVGaTAifQ.yeedlxa_OEhPEixjZnwqk9lXfMQqpM9WYzv1ZVGtvnM';
   Future<List<Providers>> fetchProviders(String endsPoint) async {
     var fullUrl = baseUrl + endsPoint;
-    var token =
-        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjE4OCwiaXNzIjoiaHR0cHM6Ly90YXh5ZWUuYWlvZnQuY29tL2FwaS9wcm92aWRlci9vYXV0aC90b2tlbiIsImlhdCI6MTY0MTgxNTYwNCwiZXhwIjoxNjQyMTc1NjA0LCJuYmYiOjE2NDE4MTU2MDQsImp0aSI6InZ4a01UbTNxYUNwak1QVW0ifQ.lgK_Y--td68kdaVlqoO0IOOUVAG_uIqe_gbEkv6iPyA';
+   
     var response = await http.get(
       Uri.parse(fullUrl),
       headers: {'Authorization': 'Bearer $token', 'Accept': "Application/json"},
@@ -17,8 +18,6 @@ class CallApi {
 
 Future<List<FleetUser>> fetchFleetUsers(String endsPoint) async {
     var fullUrl = baseUrl + endsPoint;
-    var token =
-        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjE4OCwiaXNzIjoiaHR0cHM6Ly90YXh5ZWUuYWlvZnQuY29tL2FwaS9wcm92aWRlci9vYXV0aC90b2tlbiIsImlhdCI6MTY0MTgxNTYwNCwiZXhwIjoxNjQyMTc1NjA0LCJuYmYiOjE2NDE4MTU2MDQsImp0aSI6InZ4a01UbTNxYUNwak1QVW0ifQ.lgK_Y--td68kdaVlqoO0IOOUVAG_uIqe_gbEkv6iPyA';
     var response = await http.get(
       Uri.parse(fullUrl),
       headers: {'Authorization': 'Bearer $token', 'Accept': "Application/json"},

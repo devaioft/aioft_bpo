@@ -2,6 +2,7 @@ import 'package:aioft_bpo/Screens/dashboard.dart';
 import 'package:aioft_bpo/Screens/fleet_screen.dart';
 import 'package:aioft_bpo/Screens/onboarding.screen.dart';
 import 'package:aioft_bpo/Screens/providers_screen.dart';
+import 'package:aioft_bpo/Services/preferences.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -9,8 +10,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({
+class MyApp extends StatefulWidget {
+  MyApp({
     Key? key,
     required this.settingsController,
   }) : super(key: key);
@@ -18,9 +19,29 @@ class MyApp extends StatelessWidget {
   final SettingsController settingsController;
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _prefs = PreferecesServices();
+  var _phoneNumber;
+  @override
+  void initState() {
+    super.initState();
+    popuLatesFeild();
+  }
+
+  popuLatesFeild() async {
+    final profile = await _prefs.getData();
+    setState(() {
+      _phoneNumber = profile.phoneNumber;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: settingsController,
+      animation: widget.settingsController,
       builder: (BuildContext context, Widget? child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -48,20 +69,22 @@ class MyApp extends StatelessWidget {
             ),
           ),
           darkTheme: ThemeData.dark(),
-          themeMode: settingsController.themeMode,
+          themeMode: widget.settingsController.themeMode,
           onGenerateRoute: (RouteSettings routeSettings) {
             return MaterialPageRoute<void>(
               settings: routeSettings,
               builder: (BuildContext context) {
                 switch (routeSettings.name) {
                   case SettingsView.routeName:
-                    return SettingsView(controller: settingsController);
+                    return SettingsView(controller: widget.settingsController);
                   case ProviderScreen.routeName:
                     return const ProviderScreen();
                   case FleetScreen.routeName:
                     return const FleetScreen();
                   default:
-                    return const OnBoardingPage();
+                    return _phoneNumber.toString().length < 10
+                        ? const OnBoardingPage()
+                        : const DashBoardScreen();
                 }
               },
             );
