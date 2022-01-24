@@ -18,28 +18,28 @@ class CallApi {
       headers: {'Accept': "Application/json"},
     );
     final jsonresponse = json.decode(response.body);
-    print(jsonresponse[0]);
-    return Users.fromJson(jsonresponse[0]);
+    // print(jsonresponse[0]);
+    return usersFromJson(jsonresponse);
   }
 
-  Future<List<Providers>> fetchProviders(String endsPoint) async {
-    var fullUrl = baseUrl + endsPoint;
+  // Future<List<Providers>> fetchProviders(String endsPoint) async {
+  //   var fullUrl = baseUrl + endsPoint;
 
-    var response = await http.get(
-      Uri.parse(fullUrl),
-      headers: {'Authorization': 'Bearer $token', 'Accept': "Application/json"},
-    );
-    return providersFromJson(response.body);
-  }
+  //   var response = await http.get(
+  //     Uri.parse(fullUrl),
+  //     headers: {'Authorization': 'Bearer $token', 'Accept': "Application/json"},
+  //   );
+  //   return providersFromJson(response.body);
+  // }
 
-  Future<List<FleetUser>> fetchFleetUsers(String endsPoint) async {
-    var fullUrl = baseUrl + endsPoint;
-    var response = await http.get(
-      Uri.parse(fullUrl),
-      headers: {'Authorization': 'Bearer $token', 'Accept': "Application/json"},
-    );
-    return fleetUserFromJson(response.body);
-  }
+  // Future<List<FleetUser>> fetchFleetUsers(String endsPoint) async {
+  //   var fullUrl = baseUrl + endsPoint;
+  //   var response = await http.get(
+  //     Uri.parse(fullUrl),
+  //     headers: {'Authorization': 'Bearer $token', 'Accept': "Application/json"},
+  //   );
+  //   return fleetUserFromJson(response.body);
+  // }
 
 //Tatatelecome Api
   postDataIntoTataTelecomeApi(data, apiEndPoints) async {

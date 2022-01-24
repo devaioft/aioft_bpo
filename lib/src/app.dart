@@ -1,4 +1,4 @@
-import 'package:aioft_bpo/Screens/RegistrationForm/driver_reg_form.dart';
+import 'package:aioft_bpo/Screens/RegistrationForm/provider_reg_form.dart';
 import 'package:aioft_bpo/Screens/dashboard.dart';
 import 'package:aioft_bpo/Screens/fleet_screen.dart';
 import 'package:aioft_bpo/Screens/onboarding.screen.dart';
@@ -13,7 +13,7 @@ import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
 class MyApp extends StatefulWidget {
-  MyApp({
+  const MyApp({
     Key? key,
     required this.settingsController,
   }) : super(key: key);
@@ -82,14 +82,13 @@ class _MyAppState extends State<MyApp> {
                     return SettingsView(controller: widget.settingsController);
                   case ProviderScreen.routeName:
                     return const ProviderScreen();
-                  case UserRegistarationScreen.routeName:
-                    return const UserRegistarationScreen();
+                  case ProviderRegistartion.routeName:
+                    return const ProviderRegistartion();
                   case FleetScreen.routeName:
                     return const FleetScreen();
                   case UsersScreen.routeName:
-                  return const UsersScreen();
+                    return const UsersScreen();
                   default:
-                  
                     return _phoneNumber.toString().length < 10
                         ? const OnBoardingPage()
                         : const DashBoardScreen();

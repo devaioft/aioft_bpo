@@ -19,7 +19,7 @@ class DialogBodyWidget extends StatelessWidget {
           style: const TextStyle(
             color: kBtnColor,
             fontWeight: FontWeight.w600,
-            fontSize: 32.0,
+            fontSize: 28.0,
           ),
         ),
         const SizedBox(

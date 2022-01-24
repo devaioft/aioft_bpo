@@ -1,13 +1,10 @@
 import 'dart:async';
 
-import 'package:aioft_bpo/Models/provider_model.dart';
 import 'package:aioft_bpo/Models/user_model.dart';
-import 'package:aioft_bpo/Screens/RegistrationForm/driver_reg_form.dart';
 import 'package:aioft_bpo/Services/api.dart';
 import 'package:aioft_bpo/Services/preferences.dart';
 import 'package:aioft_bpo/Widgets/dialog_body.dart';
 import 'package:aioft_bpo/Widgets/message.dart';
-import 'package:aioft_bpo/Widgets/provider_namewidget.dart';
 import 'package:aioft_bpo/Widgets/user_count_widget.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -33,7 +30,7 @@ class _UsersScreenState extends State<UsersScreen> {
   void initState() {
     super.initState();
 
-    _usersFuture = _callApi.fetchUsers('/bpolist');
+    _usersFuture = _callApi.fetchUsers('/providerall');
   }
 
   populatesField() async {
@@ -66,35 +63,9 @@ class _UsersScreenState extends State<UsersScreen> {
                   itemCount: snapshot.data!.providers!.length,
                   itemBuilder: (context, index) {
                     final user = snapshot.data!.providers![index];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 1, vertical: 2),
-                      elevation: 0.8,
-                      child: ListTile(
-                        title: Text(user.firstName.toString()),
-                        subtitle: Padding(
-                          padding: const EdgeInsets.only(bottom: 6),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // Padding(
-                              //   padding: const EdgeInsets.only(left: 8),
-                              //   child: Text(
-                              //     '${providers.id}',
-                              //     style: kCityTextStyle,
-                              //   ),
-                              // ),
-                              // Text("${providers.id}"),
-                            ],
-                          ),
-                        ),
-                        trailing: OutlinedButton(
-                          onPressed: () {
-                            // showAwesomeDialog(context, providers, index);
-                          },
-                          child: const Icon(Icons.call, color: kBtnColor),
-                        ),
-                      ),
+                    return UserCard(
+                      provider: user,
+                      onPressed: () => showAwesomeDialog(context, user),
                     );
                   });
             } else {
@@ -104,8 +75,7 @@ class _UsersScreenState extends State<UsersScreen> {
     );
   }
 
-  AwesomeDialog showAwesomeDialog(
-          BuildContext context, Providers provider, int index) =>
+  AwesomeDialog showAwesomeDialog(BuildContext context, Provider provider) =>
       AwesomeDialog(
         context: context,
         animType: AnimType.TOPSLIDE,
@@ -117,7 +87,7 @@ class _UsersScreenState extends State<UsersScreen> {
           semanticLabel: 'Make Call',
         ),
         body: DialogBodyWidget(
-          dialogTitle: '${provider.firstName} ${provider.lastName}',
+          dialogTitle: '${provider.firstName}  ${provider.lastName}',
         ),
         btnOkText: 'Connect',
         btnOkColor: kBtnColor,
@@ -163,16 +133,62 @@ class _UsersScreenState extends State<UsersScreen> {
               ),
             );
 
-            Timer(const Duration(seconds: 5), () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => UserRegistarationScreen(
-                            provider: provider,
-                          )));
-            });
+            // Timer(const Duration(seconds: 5), () {
+            //   Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //           builder: (context) => UserRegistarationScreen(
+            //               // provider: provider,
+            //               )));
+            // });
           }
         },
         btnCancelOnPress: () {},
       )..show();
+}
+
+class UserCard extends StatelessWidget {
+  const UserCard({
+    Key? key,
+    this.onPressed,
+    required this.provider,
+  }) : super(key: key);
+
+  final void Function()? onPressed;
+  final Provider provider;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+      elevation: 0.8,
+      child: ListTile(
+        title: Text(provider.firstName! + provider.lastName!),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(bottom: 6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children:  [
+              Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Text(
+                  '',
+                  style: kCityTextStyle,
+                ),
+              ),
+              Text(""),
+            ],
+          ),
+        ),
+        trailing: OutlinedButton(
+          onPressed: onPressed,
+
+          // () {
+          //   // showAwesomeDialog(context, providers, index);
+          // },
+          child: const Icon(Icons.call, color: kBtnColor),
+        ),
+      ),
+    );
+  }
 }

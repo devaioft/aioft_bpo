@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:aioft_bpo/Models/fleet_model.dart';
+import 'package:aioft_bpo/Models/user_model.dart';
+import 'package:aioft_bpo/Screens/RegistrationForm/provider_reg_form.dart';
 import 'package:aioft_bpo/Services/api.dart';
 import 'package:aioft_bpo/Services/preferences.dart';
 import 'package:aioft_bpo/Widgets/dialog_body.dart';
@@ -18,7 +22,7 @@ class FleetScreen extends StatefulWidget {
 }
 
 class _FleetScreenState extends State<FleetScreen> {
-  Future<List<FleetUser>>? _fleetUserFuture;
+  Future<Users>? _fleetUserFuture;
   final CallApi _callApi = CallApi();
   final _prefs = PreferecesServices();
   var _agentPhoneNumber;
@@ -28,13 +32,13 @@ class _FleetScreenState extends State<FleetScreen> {
   void initState() {
     super.initState();
 
-    _fleetUserFuture = _callApi.fetchFleetUsers('/fleetlists');
+    _fleetUserFuture = _callApi.fetchUsers('/providerall');
   }
 
   populatesField() async {
     final newAgent = await _prefs.getData();
     setState(() {
-      _agentPhoneNumber = newAgent.phoneNumber??'';
+      _agentPhoneNumber = newAgent.phoneNumber ?? '';
     });
   }
 
@@ -46,7 +50,7 @@ class _FleetScreenState extends State<FleetScreen> {
         title: const Text("Fleet Users"),
         actions: [UserCountWidget(userLength: userLength)],
       ),
-      body: FutureBuilder<List<FleetUser>>(
+      body: FutureBuilder<Users>(
           future: _fleetUserFuture,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
@@ -54,36 +58,42 @@ class _FleetScreenState extends State<FleetScreen> {
                 child: Text("${snapshot.error}"),
               );
             } else if (snapshot.hasData) {
-              userLength = snapshot.data!.length;
+              userLength = snapshot.data!.fleet!.length;
               return ListView.builder(
-                  itemCount: snapshot.data!.length,
+                  itemCount: snapshot.data!.fleet?.length,
                   itemBuilder: (context, index) {
-                    final fleetUser = snapshot.data![index];
+                    final fleetUser = snapshot.data!.fleet![index];
                     return Card(
                       margin: const EdgeInsets.symmetric(
                           horizontal: 1, vertical: 2),
                       elevation: 0.8,
                       child: ListTile(
-                        title: Text("${fleetUser.name}", style: kNameStyle),
+                        title: Text(
+                            "${fleetUser.firstName} ${fleetUser.lastName}",
+                            style: kNameStyle),
                         subtitle: Padding(
                           padding: const EdgeInsets.only(bottom: 6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8),
-                                child: Text(
-                                  '${fleetUser.id}',
-                                  style: kCityTextStyle,
+                              Text(
+                                fleetUser.address ?? 'No Address',
+                                style: kCityTextStyle,
+                              ),
+                              Text(
+                                fleetUser.status ?? 'No Status',
+                                style: const TextStyle(
+                                  color: kBtnColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              Text("${fleetUser.id}"),
                             ],
                           ),
                         ),
                         trailing: OutlinedButton(
                           onPressed: () {
-                            showAwesomeDialog(context, fleetUser, index);
+                            showAwesomeDialog(context, fleetUser);
                           },
                           child: const Icon(Icons.call, color: kBtnColor),
                         ),
@@ -97,15 +107,15 @@ class _FleetScreenState extends State<FleetScreen> {
     );
   }
 
-  AwesomeDialog showAwesomeDialog(
-          BuildContext context, FleetUser fleetUser, int index) =>
+  AwesomeDialog showAwesomeDialog(BuildContext context, Fleet fleetUser) =>
       AwesomeDialog(
         context: context,
         animType: AnimType.TOPSLIDE,
         dialogType: DialogType.NO_HEADER,
         dismissOnTouchOutside: false,
         body: DialogBodyWidget(
-          dialogTitle: '${fleetUser.name}',
+          dialogTitle: '${fleetUser.firstName} ${fleetUser.lastName}',
+      
         ),
         customHeader: const Icon(
           Icons.call,
@@ -154,6 +164,15 @@ class _FleetScreenState extends State<FleetScreen> {
                 ),
               ),
             );
+
+            //    Timer(const Duration(seconds: 5), () {
+            //   Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //           builder: (context) => UserRegistarationScreen(
+            //                 provider: provider,
+            //               )));
+            // });
           }
         },
         btnCancelOnPress: () {},

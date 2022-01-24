@@ -1,22 +1,20 @@
-import 'package:aioft_bpo/Models/provider_model.dart';
+import 'package:aioft_bpo/Models/user_model.dart';
 import 'package:aioft_bpo/Screens/RegistrationForm/components/custom_text_field.dart';
 import 'package:aioft_bpo/Widgets/message.dart';
 import 'package:aioft_bpo/constant.dart';
-import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 
-class UserRegistarationScreen extends StatefulWidget {
-  const UserRegistarationScreen({Key? key, this.provider}) : super(key: key);
+class ProviderRegistartion extends StatefulWidget {
+  const ProviderRegistartion({Key? key, this.provider}) : super(key: key);
   static const routeName = "/pDetail";
 
-  final Providers? provider;
+  final Provider? provider;
 
   @override
-  _UserRegistarationScreenState createState() =>
-      _UserRegistarationScreenState();
+  _ProviderRegistartionState createState() => _ProviderRegistartionState();
 }
 
-class _UserRegistarationScreenState extends State<UserRegistarationScreen> {
+class _ProviderRegistartionState extends State<ProviderRegistartion> {
   // final preferences = PreferencesData();
 
   DateTime selectedDate = DateTime.now();
@@ -24,28 +22,31 @@ class _UserRegistarationScreenState extends State<UserRegistarationScreen> {
   final _formKey = GlobalKey<FormState>();
   final addressController = TextEditingController();
   final phoneController = TextEditingController();
-  final firstnameController = TextEditingController();
-  final lastnameController = TextEditingController();
-  final cityController = TextEditingController();
+  final fullNameController = TextEditingController();
   final pincodeController = TextEditingController();
-  bool isLocation = false;
-  String? _currentAddress;
-  var dateOfBirth;
   String? carTypeValue;
-  final items = ['Owned Car', 'Fleet'];
+  final items = ['Provider', 'Fleet'];
 
-@override
+  @override
   void initState() {
     super.initState();
 
-    
+    setState(() {
+      fullNameController.text =
+          "${widget.provider!.firstName ?? ''}  ${widget.provider!.lastName ?? ''}";
+
+      addressController.text = widget.provider!.address ?? 'Bangalore';
+      phoneController.text = widget.provider!.mobile ?? '';
+      pincodeController.text = widget.provider!.pinCode ?? '123456';
+      carTypeValue = items[0];
+    });
   }
+
   @override
   Widget build(BuildContext context) {
-    addressController.text = isLocation ? _currentAddress! : "";
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: Text(widget.provider!.firstName!),
       ),
       body: SafeArea(
@@ -96,7 +97,7 @@ class _UserRegistarationScreenState extends State<UserRegistarationScreen> {
                     const Text("FULL NAME *"),
                     const SizedBox(height: 5),
                     CustomTextFormField(
-                      controller: firstnameController,
+                      controller: fullNameController,
                       hintText: "your full name",
                       readMode: false,
                       keyboardType: TextInputType.text,
@@ -139,9 +140,9 @@ class _UserRegistarationScreenState extends State<UserRegistarationScreen> {
                       child: const Text("Submit"),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          // print(firstnameController.text);
+                          // print(fullNameController.text);
                           // print(lastnameController.text);
-                          // print(cityController.text);
+                          // print(fullAdressController.text);
                           // print(addressController.text);
                           // print(dateOfBirth);
                           // print(phoneController.text);
@@ -149,8 +150,6 @@ class _UserRegistarationScreenState extends State<UserRegistarationScreen> {
                           // print(carTypeValue);
                           if (carTypeValue == null) {
                             message(context, "Please select car");
-                          } else if (dateOfBirth == null) {
-                            message(context, "please select a date of birth");
                           } else {
                             saveUserData();
                             // Navigator.pushNamed(
@@ -176,9 +175,9 @@ class _UserRegistarationScreenState extends State<UserRegistarationScreen> {
   void saveUserData() {
     // final newData = UserModel(
     //   carType: carTypeValue,
-    //   firstName: firstnameController.text,
+    //   firstName: fullNameController.text,
     //   lastName: lastnameController.text,
-    //   cityName: cityController.text,
+    //   cityName: fullAdressController.text,
     //   address: addressController.text,
     //   dob: dateOfBirth.toString(),
     //   pinCode: pincodeController.text,

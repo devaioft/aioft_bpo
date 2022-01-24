@@ -1,7 +1,6 @@
 import 'dart:async';
-
-import 'package:aioft_bpo/Models/provider_model.dart';
-import 'package:aioft_bpo/Screens/RegistrationForm/driver_reg_form.dart';
+import 'package:aioft_bpo/Models/user_model.dart';
+import 'package:aioft_bpo/Screens/RegistrationForm/provider_reg_form.dart';
 import 'package:aioft_bpo/Services/api.dart';
 import 'package:aioft_bpo/Services/preferences.dart';
 import 'package:aioft_bpo/Widgets/dialog_body.dart';
@@ -22,17 +21,17 @@ class ProviderScreen extends StatefulWidget {
 }
 
 class _ProviderScreenState extends State<ProviderScreen> {
-  Future<List<Providers>>? _providerFuture;
+  Future<Users>? _providerFuture;
   final CallApi _callApi = CallApi();
   final _prefs = PreferecesServices();
   var _agentPhoneNumber;
-  int? userLength;
+  int? providerUserLength;
 
   @override
   void initState() {
     super.initState();
 
-    _providerFuture = _callApi.fetchProviders('/providerlists');
+    _providerFuture = _callApi.fetchUsers('/providerall');
   }
 
   populatesField() async {
@@ -49,9 +48,9 @@ class _ProviderScreenState extends State<ProviderScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Providers"),
-        actions: [UserCountWidget(userLength: userLength)],
+        actions: [UserCountWidget(userLength: providerUserLength)],
       ),
-      body: FutureBuilder<List<Providers>>(
+      body: FutureBuilder<Users>(
           future: _providerFuture,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
@@ -59,19 +58,18 @@ class _ProviderScreenState extends State<ProviderScreen> {
                 child: Text("${snapshot.error}"),
               );
             } else if (snapshot.hasData) {
-              userLength = snapshot.data!.length;
+              providerUserLength = snapshot.data!.providers!.length;
 
               return ListView.builder(
-                  itemCount: snapshot.data!.length,
+                  itemCount: snapshot.data!.providers!.length,
                   itemBuilder: (context, index) {
-                    final providers = snapshot.data![index];
+                    final providerUser = snapshot.data!.providers![index];
                     return Card(
                       margin: const EdgeInsets.symmetric(
                           horizontal: 1, vertical: 2),
                       elevation: 0.8,
                       child: ListTile(
-                        title:
-                            ProviderNameWidget(user: providers, index: index),
+                        title: ProviderNameWidget(user: providerUser),
                         subtitle: Padding(
                           padding: const EdgeInsets.only(bottom: 6),
                           child: Row(
@@ -80,17 +78,27 @@ class _ProviderScreenState extends State<ProviderScreen> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 8),
                                 child: Text(
-                                  '${providers.id}',
-                                  style: kCityTextStyle,
+                                  providerUser.address ?? 'No address',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13.0,
+                                  ),
                                 ),
                               ),
-                              Text("${providers.id}"),
+                              Text(
+                                providerUser.status ?? 'No status',
+                                style: const TextStyle(
+                                  color: kBtnColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ],
                           ),
                         ),
                         trailing: OutlinedButton(
                           onPressed: () {
-                            showAwesomeDialog(context, providers, index);
+                            showAwesomeDialog(context, providerUser);
                           },
                           child: const Icon(Icons.call, color: kBtnColor),
                         ),
@@ -104,8 +112,7 @@ class _ProviderScreenState extends State<ProviderScreen> {
     );
   }
 
-  AwesomeDialog showAwesomeDialog(
-          BuildContext context, Providers provider, int index) =>
+  AwesomeDialog showAwesomeDialog(BuildContext context, Provider provider) =>
       AwesomeDialog(
         context: context,
         animType: AnimType.TOPSLIDE,
@@ -163,10 +170,13 @@ class _ProviderScreenState extends State<ProviderScreen> {
               ),
             );
 
-            Timer(  const Duration(seconds: 5), () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>  UserRegistarationScreen(
-                provider: provider,
-              )));
+            Timer(const Duration(seconds: 5), () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProviderRegistartion(
+                            provider: provider,
+                          )));
             });
           }
         },
