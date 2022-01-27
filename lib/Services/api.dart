@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:aioft_bpo/Models/fleet_model.dart';
 import 'package:aioft_bpo/Models/user_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:aioft_bpo/Models/provider_model.dart';
 
 class CallApi {
   final baseUrl = 'https://taxyee.aioft.com/api/provider';

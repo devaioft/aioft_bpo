@@ -24,7 +24,7 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
   final phoneController = TextEditingController();
   final fullNameController = TextEditingController();
   final pincodeController = TextEditingController();
-  String? carTypeValue;
+  String? _userTypeValue;
   final items = ['Provider', 'Fleet'];
 
   @override
@@ -38,7 +38,7 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
       addressController.text = widget.provider!.address ?? 'Bangalore';
       phoneController.text = widget.provider!.mobile ?? '';
       pincodeController.text = widget.provider!.pinCode ?? '123456';
-      carTypeValue = items[0];
+      _userTypeValue = items[0];
     });
   }
 
@@ -78,7 +78,7 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
                               style: TextStyle(color: Colors.grey),
                             ),
                             style: kDropDownMenuStyle,
-                            value: carTypeValue,
+                            value: _userTypeValue,
                             iconSize: 30,
                             icon: const Icon(
                               Icons.arrow_drop_down_circle_outlined,
@@ -87,7 +87,7 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
                             isExpanded: true,
                             items: items.map(buildMenuItem).toList(),
                             onChanged: (value) => setState(() {
-                              carTypeValue = value.toString();
+                              _userTypeValue = value.toString();
                             }),
                           ),
                         ),
@@ -140,15 +140,13 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
                       child: const Text("Submit"),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          // print(fullNameController.text);
-                          // print(lastnameController.text);
-                          // print(fullAdressController.text);
-                          // print(addressController.text);
-                          // print(dateOfBirth);
-                          // print(phoneController.text);
-                          // print(pincodeController.text);
-                          // print(carTypeValue);
-                          if (carTypeValue == null) {
+                          print(fullNameController.text);
+                          
+                          print(addressController.text);
+                          print(phoneController.text);
+                          print(pincodeController.text);
+                          print(_userTypeValue);
+                          if (_userTypeValue == null) {
                             message(context, "Please select car");
                           } else {
                             saveUserData();
@@ -173,30 +171,13 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
       );
 
   void saveUserData() {
-    // final newData = UserModel(
-    //   carType: carTypeValue,
-    //   firstName: fullNameController.text,
-    //   lastName: lastnameController.text,
-    //   cityName: fullAdressController.text,
-    //   address: addressController.text,
-    //   dob: dateOfBirth.toString(),
-    //   pinCode: pincodeController.text,
-    //   phone: phoneController.text,
-    // );
-    // print(newData);
-    // preferences.saveData(newData);
+
+     data:{
+       
+     }
+   
+   
   }
 
-  _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate, // Refer step 1
-      firstDate: DateTime(1985),
-      lastDate: DateTime(2025),
-    );
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
-  }
+  
 }
