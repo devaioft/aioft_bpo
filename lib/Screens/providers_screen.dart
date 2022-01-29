@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:aioft_bpo/Models/user_model.dart';
 import 'package:aioft_bpo/Screens/RegistrationForm/provider_reg_form.dart';
+import 'package:aioft_bpo/Screens/callLogs/call_history.dart';
 import 'package:aioft_bpo/Services/api.dart';
 import 'package:aioft_bpo/Services/preferences.dart';
 import 'package:aioft_bpo/Widgets/dialog_body.dart';
@@ -48,7 +49,16 @@ class _ProviderScreenState extends State<ProviderScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Providers"),
-        actions: [UserCountWidget(userLength: providerUserLength)],
+        actions: [
+          // IconButton(
+          //   // onPressed: ()=>Navigator.restorablePushNamed(context, CallHistory.routeName),
+          //   icon: const Icon(
+          //     Icons.history_sharp,
+          //     size: 24,
+          //   ),
+          // ),
+          UserCountWidget(userLength: providerUserLength)
+        ],
       ),
       body: FutureBuilder<Users>(
           future: _providerFuture,

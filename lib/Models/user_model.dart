@@ -2,11 +2,7 @@
 //
 //     final users = usersFromJson(jsonString);
 
-import 'dart:convert';
-
 Users usersFromJson(dynamic str) => Users.fromJson(str);
-
-String usersToJson(Users data) => json.encode(data.toJson());
 
 class Users {
   Users({
@@ -22,15 +18,11 @@ class Users {
             json["providers"].map((x) => Provider.fromJson(x))),
         fleet: List<Fleet>.from(json["fleet"].map((x) => Fleet.fromJson(x))),
       );
-
-  Map<String, dynamic> toJson() => {
-        "providers": List<dynamic>.from(providers!.map((x) => x.toJson())),
-        "fleet": List<dynamic>.from(fleet!.map((x) => x.toJson())),
-      };
 }
 
 class Fleet {
   Fleet({
+    this.id,
     this.name,
     this.email,
     this.mobile,
@@ -50,6 +42,7 @@ class Fleet {
     this.pinCode,
   });
 
+  int? id;
   dynamic name;
   String? email;
   String? mobile;
@@ -76,10 +69,8 @@ class Fleet {
         firstName: json["first_name"],
         lastName: json["last_name"],
         avatar: json["avatar"],
-        serviceNumber:
-            json["service_number"],
-        serviceModel:
-            json["service_model"],
+        serviceNumber: json["service_number"],
+        serviceModel: json["service_model"],
         address: json["address"],
         addressSecondary: json["address_secondary"],
         city: json["city"],
@@ -89,29 +80,11 @@ class Fleet {
         status: json["status"],
         pinCode: json['postal_code'],
       );
-
-  Map<String, dynamic> toJson() => {
-        "name": name,
-        "email": email,
-        "mobile": mobile,
-        "logo": logo,
-        "first_name": firstName,
-        "last_name": lastName,
-        "avatar": avatar,
-        "service_number": serviceNumber,
-        "service_model": serviceModel,
-        "address": address,
-        "address_secondary": addressSecondary,
-        "city": city,
-        "country": country,
-        "document_id": documentId ,
-        "url": url,
-        "status": status,
-      };
 }
 
 class Provider {
   Provider({
+    this.id,
     this.firstName,
     this.lastName,
     this.email,
@@ -129,6 +102,7 @@ class Provider {
     this.pinCode,
   });
 
+  int? id;
   String? firstName;
   String? lastName;
   String? email;
@@ -151,10 +125,8 @@ class Provider {
         email: json["email"],
         mobile: json["mobile"],
         avatar: json["avatar"],
-        serviceNumber:
-            json["service_number"],
-        serviceModel:
-            json["service_model"],
+        serviceNumber: json["service_number"],
+        serviceModel: json["service_model"],
         address: json["address"],
         addressSecondary: json["address_secondary"],
         city: json["city"],
@@ -163,23 +135,5 @@ class Provider {
         url: json["url"],
         status: json["status"],
         pinCode: json['postal_code'],
-
       );
-
-  Map<String, dynamic> toJson() => {
-        "first_name": firstName,
-        "last_name": lastName,
-        "email": email,
-        "mobile": mobile,
-        "avatar": avatar,
-        "service_number": serviceNumber,
-        "service_model": serviceModel,
-        "address": address,
-        "address_secondary": addressSecondary,
-        "city": city,
-        "country": country,
-        "document_id": documentId,
-        "url": url,
-        "status": status,
-      };
 }

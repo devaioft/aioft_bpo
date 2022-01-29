@@ -18,6 +18,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  final _regFormLinkController = TextEditingController();
   final _phoneController = TextEditingController();
 
   final _prefs = PreferecesServices();
@@ -25,13 +26,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    
     populatesField();
   }
 
   populatesField() async {
     final profile = await _prefs.getData();
     setState(() {
-      _phoneController.text = profile.phoneNumber??'';
+      _phoneController.text = profile.phoneNumber ?? '';
+      _regFormLinkController.text = profile.link ?? '';
     });
   }
 
@@ -39,126 +42,159 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColor,
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: kCardColor,
-                  child: IconButton(
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DashBoardScreen(),
-                      ),
-                    ),
-                    icon: const Icon(
-                      Icons.arrow_back_ios_new,
-                      color: kIconTextColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Container(
-                padding: const EdgeInsets.all(10),
-                child: Center(
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: const TextSpan(
-                      text: 'Add Agent Number\n\n',
-                      style: TextStyle(
-                        color: kBtnColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                        fontFamily: 'Nunito-Bold',
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: 'Who wants to first  attend the call?',
-                          style: TextStyle(
-                            color: Colors.blueAccent,
-                            fontSize: 16,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                )),
-            const SizedBox(height: 50),
-            Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8.0, left: 1.0, bottom: 10),
-                    child: Text(
-                      "Agent Mobile Number",
-                      style: TextStyle(
-                        color: kBtnColor,
-                        fontSize: 12.0,
+                  CircleAvatar(
+                    backgroundColor: kCardColor,
+                    child: IconButton(
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DashBoardScreen(),
+                        ),
+                      ),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: kIconTextColor,
                       ),
                     ),
-                  ),
-                  TextFormField(
-                    controller: _phoneController,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter agent mobile number',
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.phone,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter agent mobile number';
-                      }
-                      if (value.length < 10) {
-                        return 'Please enter valid agent mobile number';
-                      }
-                      return null;
-                    },
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  if (_phoneController.text.length < 10 ||
-                      _phoneController.text.length > 10) {
-                    message(context, 'Please Enter a valid number');
-                  } else {
-                    final newProfile =
-                        Profile(phoneNumber: _phoneController.text);
-                    setState(() {
-                      _prefs.setData(newProfile);
-                    });
-                    message(context, 'Updated Succesfully!');
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const DashBoardScreen()));
-                  }
-                }
-              },
-              child: Text(
-                _phoneController.text.isEmpty ? 'Add ' : 'Update',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              Container(
+                  padding: const EdgeInsets.all(10),
+                  child: Center(
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: const TextSpan(
+                        text: 'Add Agent Number\n\n',
+                        style: TextStyle(
+                          color: kBtnColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                          fontFamily: 'Nunito-Bold',
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Who wants to first  attend the call?',
+                            style: TextStyle(
+                              color: Colors.blueAccent,
+                              fontSize: 16,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )),
+              const SizedBox(height: 50),
+              Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 8.0, left: 1.0, bottom: 10),
+                      child: Text(
+                        "Agent Mobile Number",
+                        style: TextStyle(
+                          color: kBtnColor,
+                          fontSize: 12.0,
+                        ),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _phoneController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter agent mobile number',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.phone,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter agent mobile number';
+                        }
+                        if (value.length < 10) {
+                          return 'Please enter valid agent mobile number';
+                        }
+                        return null;
+                      },
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 8.0, left: 1.0, bottom: 10),
+                      child: Text(
+                        "Registration Form Link",
+                        style: TextStyle(
+                          color: kBtnColor,
+                          fontSize: 12.0,
+                        ),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _regFormLinkController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter Registration form link',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter valid link';
+                        }
+
+                        return null;
+                      },
+                    ),
+                  ],
                 ),
               ),
-              style: ElevatedButton.styleFrom(
-                primary: kBtnColor,
-                onPrimary: kCardColor,
-                padding: const EdgeInsets.all(16),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    if (_phoneController.text.length < 10 ||
+                        _phoneController.text.length > 10) {
+                      message(context, 'Please Enter a valid number');
+                    } else {
+                      final newProfile = Profile(
+                        phoneNumber: _phoneController.text,
+                        link: _regFormLinkController.text,
+                      );
+                      setState(() {
+                        _prefs.setData(newProfile);
+                      });
+                      message(context, 'Updated Succesfully!');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DashBoardScreen(),
+                        ),
+                      );
+                    }
+                  }
+                },
+                child: Text(
+                  _phoneController.text.isEmpty |
+                          _regFormLinkController.text.isEmpty
+                      ? 'Add '
+                      : 'Update',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: kBtnColor,
+                  onPrimary: kCardColor,
+                  padding: const EdgeInsets.all(16),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

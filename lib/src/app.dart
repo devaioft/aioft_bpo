@@ -88,6 +88,8 @@ class _MyAppState extends State<MyApp> {
                     return const FleetScreen();
                   case UsersScreen.routeName:
                     return const UsersScreen();
+                  // case CallHistory.routeName:
+                  //   return const CallHistory();
                   default:
                     return _phoneNumber.toString().length < 10
                         ? const OnBoardingPage()

@@ -1,5 +1,6 @@
 import 'package:aioft_bpo/Models/user_model.dart';
 import 'package:aioft_bpo/Screens/RegistrationForm/components/custom_text_field.dart';
+import 'package:aioft_bpo/Services/api.dart';
 import 'package:aioft_bpo/Widgets/message.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +21,11 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
   DateTime selectedDate = DateTime.now();
 
   final _formKey = GlobalKey<FormState>();
+  int? userid;
   final addressController = TextEditingController();
   final phoneController = TextEditingController();
-  final fullNameController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
   final pincodeController = TextEditingController();
   String? _userTypeValue;
   final items = ['Provider', 'Fleet'];
@@ -32,8 +35,9 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
     super.initState();
 
     setState(() {
-      fullNameController.text =
-          "${widget.provider!.firstName ?? ''}  ${widget.provider!.lastName ?? ''}";
+      userid = widget.provider!.id ?? 0;
+      firstNameController.text = widget.provider!.firstName ?? '';
+      lastNameController.text = widget.provider!.lastName ?? '';
 
       addressController.text = widget.provider!.address ?? 'Bangalore';
       phoneController.text = widget.provider!.mobile ?? '';
@@ -94,14 +98,24 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    const Text("FULL NAME *"),
+                    const Text("FIRST NAME *"),
                     const SizedBox(height: 5),
                     CustomTextFormField(
-                      controller: fullNameController,
-                      hintText: "your full name",
+                      controller: firstNameController,
+                      hintText: "your first name",
                       readMode: false,
                       keyboardType: TextInputType.text,
-                      errorMessage: "Please enter full name",
+                      errorMessage: "Please enter first name",
+                    ),
+                    const SizedBox(height: 5),
+                    const Text("LAST NAME *"),
+                    const SizedBox(height: 5),
+                    CustomTextFormField(
+                      controller: lastNameController,
+                      hintText: "your last name",
+                      readMode: false,
+                      keyboardType: TextInputType.text,
+                      errorMessage: "Please enter last name",
                     ),
                     const SizedBox(height: 5),
                     const Text("PHONE NUMBER *"),
@@ -140,18 +154,10 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
                       child: const Text("Submit"),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          print(fullNameController.text);
-                          
-                          print(addressController.text);
-                          print(phoneController.text);
-                          print(pincodeController.text);
-                          print(_userTypeValue);
                           if (_userTypeValue == null) {
                             message(context, "Please select car");
                           } else {
-                            saveUserData();
-                            // Navigator.pushNamed(
-                            //     context, UploadDocumnet.routeName);
+                            upDateUserData();
                           }
                         }
                       },
@@ -170,14 +176,22 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
         child: Text(item),
       );
 
-  void saveUserData() {
+  void upDateUserData() {
+    print(firstNameController.text);
 
-     data:{
-       
-     }
-   
-   
+    print(addressController.text);
+    print(phoneController.text);
+    print(pincodeController.text);
+    print(_userTypeValue);
+
+    var data = {
+      'first_name': firstNameController.text,
+      'last_name': lastNameController.text,
+      'mobile': phoneController.text,
+      'address': addressController.text,
+      'postal_code': pincodeController.text,
+    };
+
+    CallApi().updateDataIntoDataBase(data, '/provider', userid);
   }
-
-  
 }
