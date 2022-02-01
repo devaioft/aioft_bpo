@@ -18,13 +18,15 @@ class CallApi {
   }
 
 //updatUserData
-  updateDataIntoDataBase(data, apiEndspoint, id) async {
+ Future<void> updateDataIntoDataBase(data, apiEndspoint, id) async {
     var _response = await http.post(
-      Uri.parse(baseUrl + apiEndspoint + '/$id'),
+      Uri.parse(baseUrl + apiEndspoint + id),
       body: data,
       headers: {'Accept': "Application/json"},
     );
-    print(_response.body);
+    if (_response.statusCode == 200) {
+      print(_response.body);
+    }
   }
 
 //Tatatelecome Api

@@ -1,9 +1,11 @@
 import 'package:aioft_bpo/Models/user_model.dart';
 import 'package:aioft_bpo/Screens/RegistrationForm/components/custom_text_field.dart';
+import 'package:aioft_bpo/Screens/providers_screen.dart';
 import 'package:aioft_bpo/Services/api.dart';
 import 'package:aioft_bpo/Widgets/message.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 
 class ProviderRegistartion extends StatefulWidget {
   const ProviderRegistartion({Key? key, this.provider}) : super(key: key);
@@ -30,12 +32,15 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
   String? _userTypeValue;
   final items = ['Provider', 'Fleet'];
 
+  String msg = "This is a test message!";
+  List<String> recipents = ['7779974130'];
+
   @override
   void initState() {
     super.initState();
 
     setState(() {
-      userid = widget.provider!.id ?? 0;
+      userid = widget.provider!.id;
       firstNameController.text = widget.provider!.firstName ?? '';
       lastNameController.text = widget.provider!.lastName ?? '';
 
@@ -50,7 +55,11 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: true,
+        leading: IconButton(
+          onPressed: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const ProviderScreen())),
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
         title: Text(widget.provider!.firstName!),
       ),
       body: SafeArea(
@@ -58,113 +67,120 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
           padding: const EdgeInsets.all(12),
           children: [
             Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Text("USER TYPE *"),
-                    const SizedBox(height: 5),
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(width: 1.2, color: Colors.grey),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: ButtonTheme(
-                          alignedDropdown: true,
-                          child: DropdownButton(
-                            borderRadius: BorderRadius.circular(8.0),
-                            elevation: 3,
-                            hint: const Text(
-                              "Select car type",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                            style: kDropDownMenuStyle,
-                            value: _userTypeValue,
-                            iconSize: 30,
-                            icon: const Icon(
-                              Icons.arrow_drop_down_circle_outlined,
-                              color: Colors.lightBlueAccent,
-                            ),
-                            isExpanded: true,
-                            items: items.map(buildMenuItem).toList(),
-                            onChanged: (value) => setState(() {
-                              _userTypeValue = value.toString();
-                            }),
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text("USER TYPE *"),
+                  const SizedBox(height: 5),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(width: 1.2, color: Colors.grey),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: ButtonTheme(
+                        alignedDropdown: true,
+                        child: DropdownButton(
+                          borderRadius: BorderRadius.circular(8.0),
+                          elevation: 3,
+                          hint: const Text(
+                            "Select car type",
+                            style: TextStyle(color: Colors.grey),
                           ),
+                          style: kDropDownMenuStyle,
+                          value: _userTypeValue,
+                          iconSize: 30,
+                          icon: const Icon(
+                            Icons.arrow_drop_down_circle_outlined,
+                            color: Colors.lightBlueAccent,
+                          ),
+                          isExpanded: true,
+                          items: items.map(buildMenuItem).toList(),
+                          onChanged: (value) => setState(() {
+                            _userTypeValue = value.toString();
+                          }),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
-                    const Text("FIRST NAME *"),
-                    const SizedBox(height: 5),
-                    CustomTextFormField(
-                      controller: firstNameController,
-                      hintText: "your first name",
-                      readMode: false,
-                      keyboardType: TextInputType.text,
-                      errorMessage: "Please enter first name",
-                    ),
-                    const SizedBox(height: 5),
-                    const Text("LAST NAME *"),
-                    const SizedBox(height: 5),
-                    CustomTextFormField(
-                      controller: lastNameController,
-                      hintText: "your last name",
-                      readMode: false,
-                      keyboardType: TextInputType.text,
-                      errorMessage: "Please enter last name",
-                    ),
-                    const SizedBox(height: 5),
-                    const Text("PHONE NUMBER *"),
-                    const SizedBox(height: 10),
-                    CustomTextFormField(
-                      controller: phoneController,
-                      hintText: "phone no",
-                      readMode: true,
-                      keyboardType: TextInputType.phone,
-                      errorMessage: "Please Enter the last name",
-                    ),
-                    const SizedBox(height: 5),
-                    const Text("FULL ADDRESS *"),
-                    const SizedBox(height: 10),
-                    CustomTextFormField(
-                      controller: addressController,
-                      readMode: false,
-                      hintText: "Address",
-                      errorMessage: "please enter your address",
-                      keyboardType: TextInputType.streetAddress,
-                    ),
-                    const SizedBox(height: 5),
-                    const Text("PIN/ZIP CODE *"),
-                    const SizedBox(height: 10),
-                    CustomTextFormField(
-                      controller: pincodeController,
-                      readMode: false,
-                      hintText: "PIN/ZIP CODE",
-                      keyboardType: TextInputType.number,
-                      errorMessage: "Please enter your zip code",
-                    ),
-                    const SizedBox(
-                      height: 20.0,
-                    ),
-                    ElevatedButton(
-                      child: const Text("Submit"),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          if (_userTypeValue == null) {
-                            message(context, "Please select car");
-                          } else {
-                            upDateUserData();
-                          }
+                  ),
+                  const SizedBox(height: 12),
+                  const Text("FIRST NAME *"),
+                  const SizedBox(height: 5),
+                  CustomTextFormField(
+                    controller: firstNameController,
+                    hintText: "your first name",
+                    readMode: false,
+                    keyboardType: TextInputType.text,
+                    errorMessage: "Please enter first name",
+                  ),
+                  const SizedBox(height: 5),
+                  const Text("LAST NAME *"),
+                  const SizedBox(height: 5),
+                  CustomTextFormField(
+                    controller: lastNameController,
+                    hintText: "your last name",
+                    readMode: false,
+                    keyboardType: TextInputType.text,
+                    errorMessage: "Please enter last name",
+                  ),
+                  const SizedBox(height: 5),
+                  const Text("PHONE NUMBER *"),
+                  const SizedBox(height: 10),
+                  CustomTextFormField(
+                    controller: phoneController,
+                    hintText: "phone no",
+                    readMode: false,
+                    keyboardType: TextInputType.phone,
+                    errorMessage: "Please Enter the last name",
+                  ),
+                  const SizedBox(height: 5),
+                  const Text("FULL ADDRESS *"),
+                  const SizedBox(height: 10),
+                  CustomTextFormField(
+                    controller: addressController,
+                    readMode: false,
+                    hintText: "Address",
+                    errorMessage: "please enter your address",
+                    keyboardType: TextInputType.streetAddress,
+                  ),
+                  const SizedBox(height: 5),
+                  const Text("PIN/ZIP CODE *"),
+                  const SizedBox(height: 10),
+                  CustomTextFormField(
+                    controller: pincodeController,
+                    readMode: false,
+                    hintText: "PIN/ZIP CODE",
+                    keyboardType: TextInputType.number,
+                    errorMessage: "Please enter your zip code",
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  ElevatedButton(
+                    child: const Text("Submit"),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        if (_userTypeValue == null) {
+                          message(context, "Please select car");
+                        } else {
+                          upDateUserData();
+                          message(context, 'Updated Suceesfully!');
                         }
-                      },
-                      style: kElevatedButtonstyle,
-                    )
-                  ],
-                )),
+                      }
+                    },
+                    style: kElevatedButtonstyle,
+                  )
+                ],
+              ),
+            ),
+            TextButton(
+                onPressed: () {
+                  // _sendSMS(msg, recipents);
+                },
+                child: const Text('Send the registration link to customer'))
           ],
         ),
       ),
@@ -177,10 +193,12 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
       );
 
   void upDateUserData() {
+    print(userid);
     print(firstNameController.text);
 
     print(addressController.text);
     print(phoneController.text);
+
     print(pincodeController.text);
     print(_userTypeValue);
 
@@ -190,8 +208,23 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
       'mobile': phoneController.text,
       'address': addressController.text,
       'postal_code': pincodeController.text,
+      'avatar': '',
+      'city': '',
+      'country': '',
+      'address_secondary': '',
+      'language': '',
+      'description': ''
     };
 
-    CallApi().updateDataIntoDataBase(data, '/provider', userid);
+    CallApi()
+        .updateDataIntoDataBase(data, '/provider_update/', userid.toString());
   }
+
+  // void _sendSMS(String message, List<String> recipents) async {
+  //   String _result = await sendSMS(message: message, recipients: recipents)
+  //       .catchError((onError) {
+  //     print(onError);
+  //   });
+  //   print(_result);
+  // }
 }

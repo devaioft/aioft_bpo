@@ -120,6 +120,7 @@ class Provider {
   String? pinCode;
 
   factory Provider.fromJson(Map<String, dynamic> json) => Provider(
+        id: json["id"],
         firstName: json["first_name"],
         lastName: json["last_name"],
         email: json["email"],

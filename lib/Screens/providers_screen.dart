@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:aioft_bpo/Models/user_model.dart';
 import 'package:aioft_bpo/Screens/RegistrationForm/provider_reg_form.dart';
 import 'package:aioft_bpo/Screens/callLogs/call_history.dart';
+import 'package:aioft_bpo/Screens/dashboard.dart';
 import 'package:aioft_bpo/Services/api.dart';
 import 'package:aioft_bpo/Services/preferences.dart';
 import 'package:aioft_bpo/Widgets/dialog_body.dart';
@@ -48,12 +49,18 @@ class _ProviderScreenState extends State<ProviderScreen> {
     populatesField();
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const DashBoardScreen())),
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
         title: const Text("Providers"),
         actions: [
           // IconButton(
           //   // onPressed: ()=>Navigator.restorablePushNamed(context, CallHistory.routeName),
           //   icon: const Icon(
           //     Icons.history_sharp,
+
           //     size: 24,
           //   ),
           // ),
@@ -88,7 +95,7 @@ class _ProviderScreenState extends State<ProviderScreen> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 8),
                                 child: Text(
-                                  providerUser.address ?? 'No address',
+                                  providerUser.id.toString(),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 13.0,
@@ -106,11 +113,38 @@ class _ProviderScreenState extends State<ProviderScreen> {
                             ],
                           ),
                         ),
-                        trailing: OutlinedButton(
-                          onPressed: () {
-                            showAwesomeDialog(context, providerUser);
-                          },
-                          child: const Icon(Icons.call, color: kBtnColor),
+                        trailing: SizedBox(
+                          width: 100,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProviderRegistartion(
+                                                  provider: providerUser,
+                                                )));
+                                  },
+                                  icon: const Icon(Icons.visibility_sharp)),
+                              SizedBox(
+                                height: 30,
+                                width: 45,
+                                child: OutlinedButton(
+                                  onPressed: () {
+                                    showAwesomeDialog(context, providerUser);
+                                  },
+                                  child: const Icon(
+                                    Icons.call,
+                                    color: kBtnColor,
+                                    size: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );
