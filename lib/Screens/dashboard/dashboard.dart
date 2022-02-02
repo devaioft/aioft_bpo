@@ -1,5 +1,5 @@
-import 'package:aioft_bpo/Screens/home_screen.dart';
-import 'package:aioft_bpo/Screens/profile_screen.dart';
+import 'package:aioft_bpo/Screens/home/home_screen.dart';
+import 'package:aioft_bpo/Screens/profile/profile_screen.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:flutter/material.dart';
 

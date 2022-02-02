@@ -62,6 +62,7 @@ class Fleet {
   String? pinCode;
 
   factory Fleet.fromJson(Map<String, dynamic> json) => Fleet(
+        id: json['id'],
         name: json["name"],
         email: json["email"],
         mobile: json["mobile"],

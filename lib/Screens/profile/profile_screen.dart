@@ -1,4 +1,4 @@
-import 'package:aioft_bpo/Screens/dashboard.dart';
+import 'package:aioft_bpo/Screens/dashboard/dashboard.dart';
 import 'package:aioft_bpo/Services/preferences.dart';
 import 'package:aioft_bpo/Widgets/message.dart';
 import 'package:aioft_bpo/constant.dart';

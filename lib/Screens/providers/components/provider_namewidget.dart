@@ -1,5 +1,4 @@
 
-import 'package:aioft_bpo/Models/provider_model.dart';
 import 'package:aioft_bpo/Models/user_model.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:flutter/material.dart';

@@ -1,44 +1,41 @@
 import 'dart:async';
+
 import 'package:aioft_bpo/Models/user_model.dart';
-import 'package:aioft_bpo/Screens/RegistrationForm/provider_reg_form.dart';
-import 'package:aioft_bpo/Screens/callLogs/call_history.dart';
-import 'package:aioft_bpo/Screens/dashboard.dart';
+import 'package:aioft_bpo/Screens/fleet/components/fleet_reg_form.dart';
 import 'package:aioft_bpo/Services/api.dart';
 import 'package:aioft_bpo/Services/preferences.dart';
 import 'package:aioft_bpo/Widgets/dialog_body.dart';
 import 'package:aioft_bpo/Widgets/message.dart';
-import 'package:aioft_bpo/Widgets/provider_namewidget.dart';
 import 'package:aioft_bpo/Widgets/user_count_widget.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 
-class ProviderScreen extends StatefulWidget {
-  const ProviderScreen({Key? key}) : super(key: key);
+class FleetScreen extends StatefulWidget {
+  const FleetScreen({Key? key}) : super(key: key);
 
-  static const routeName = '/provider';
+  static const routeName = '/fleet';
 
   @override
-  _ProviderScreenState createState() => _ProviderScreenState();
+  _FleetScreenState createState() => _FleetScreenState();
 }
 
-class _ProviderScreenState extends State<ProviderScreen> {
-  Future<Users>? _providerFuture;
+class _FleetScreenState extends State<FleetScreen> {
+  Future<Users>? _fleetUserFuture;
   final CallApi _callApi = CallApi();
   final _prefs = PreferecesServices();
   var _agentPhoneNumber;
-  int? providerUserLength;
+  int? userLength;
 
   @override
   void initState() {
     super.initState();
 
-    _providerFuture = _callApi.fetchUsers('/providerall');
+    _fleetUserFuture = _callApi.fetchUsers('/providerall');
   }
 
   populatesField() async {
     final newAgent = await _prefs.getData();
-
     setState(() {
       _agentPhoneNumber = newAgent.phoneNumber ?? '';
     });
@@ -49,61 +46,42 @@ class _ProviderScreenState extends State<ProviderScreen> {
     populatesField();
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const DashBoardScreen())),
-          icon: const Icon(Icons.arrow_back_ios),
-        ),
-        title: const Text("Providers"),
-        actions: [
-          // IconButton(
-          //   // onPressed: ()=>Navigator.restorablePushNamed(context, CallHistory.routeName),
-          //   icon: const Icon(
-          //     Icons.history_sharp,
-
-          //     size: 24,
-          //   ),
-          // ),
-          UserCountWidget(userLength: providerUserLength)
-        ],
+        
+        title: const Text("Fleet Users"),
+        actions: [UserCountWidget(userLength: userLength)],
       ),
       body: FutureBuilder<Users>(
-          future: _providerFuture,
+          future: _fleetUserFuture,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Center(
                 child: Text("${snapshot.error}"),
               );
             } else if (snapshot.hasData) {
-              providerUserLength = snapshot.data!.providers!.length;
-
+              userLength = snapshot.data!.fleet!.length;
               return ListView.builder(
-                  itemCount: snapshot.data!.providers!.length,
+                  itemCount: snapshot.data!.fleet?.length,
                   itemBuilder: (context, index) {
-                    final providerUser = snapshot.data!.providers![index];
+                    final fleetUser = snapshot.data!.fleet![index];
                     return Card(
                       margin: const EdgeInsets.symmetric(
                           horizontal: 1, vertical: 2),
                       elevation: 0.8,
                       child: ListTile(
-                        title: ProviderNameWidget(user: providerUser),
+                        title: Text(
+                            "${fleetUser.firstName} ${fleetUser.lastName}",
+                            style: kNameStyle),
                         subtitle: Padding(
                           padding: const EdgeInsets.only(bottom: 6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8),
-                                child: Text(
-                                  providerUser.id.toString(),
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13.0,
-                                  ),
-                                ),
+                              Text(
+                                fleetUser.address ?? 'No Address',
+                                style: kCityTextStyle,
                               ),
                               Text(
-                                providerUser.status ?? 'No status',
+                                fleetUser.status ?? 'No Status',
                                 style: const TextStyle(
                                   color: kBtnColor,
                                   fontSize: 12,
@@ -121,12 +99,12 @@ class _ProviderScreenState extends State<ProviderScreen> {
                               IconButton(
                                   onPressed: () {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ProviderRegistartion(
-                                                  provider: providerUser,
-                                                )));
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            FleetRegistartion(fleet: fleetUser),
+                                      ),
+                                    );
                                   },
                                   icon: const Icon(Icons.visibility_sharp)),
                               SizedBox(
@@ -134,7 +112,7 @@ class _ProviderScreenState extends State<ProviderScreen> {
                                 width: 45,
                                 child: OutlinedButton(
                                   onPressed: () {
-                                    showAwesomeDialog(context, providerUser);
+                                    showAwesomeDialog(context, fleetUser);
                                   },
                                   child: const Icon(
                                     Icons.call,
@@ -156,26 +134,26 @@ class _ProviderScreenState extends State<ProviderScreen> {
     );
   }
 
-  AwesomeDialog showAwesomeDialog(BuildContext context, Provider provider) =>
+  AwesomeDialog showAwesomeDialog(BuildContext context, Fleet fleetUser) =>
       AwesomeDialog(
         context: context,
         animType: AnimType.TOPSLIDE,
-        dialogType: DialogType.SUCCES,
+        dialogType: DialogType.NO_HEADER,
         dismissOnTouchOutside: false,
+        body: DialogBodyWidget(
+          dialogTitle: '${fleetUser.firstName} ${fleetUser.lastName}',
+        ),
         customHeader: const Icon(
           Icons.call,
           size: 45,
           semanticLabel: 'Make Call',
-        ),
-        body: DialogBodyWidget(
-          dialogTitle: '${provider.firstName} ${provider.lastName}',
         ),
         btnOkText: 'Connect',
         btnOkColor: kBtnColor,
         btnOkOnPress: () {
           var data = {
             'agent_number': _agentPhoneNumber,
-            'destination_number': provider.mobile,
+            'destination_number': fleetUser.mobile,
           };
           if (_agentPhoneNumber == null) {
             message(context, 'Please Add Agent number in profile section.');
@@ -187,7 +165,6 @@ class _ProviderScreenState extends State<ProviderScreen> {
                 'Agent number is greater than 10. Try to add valid number');
           } else {
             CallApi().postDataIntoTataTelecomeApi(data, '/click_to_call');
-
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 shape: const RoundedRectangleBorder(
@@ -196,9 +173,9 @@ class _ProviderScreenState extends State<ProviderScreen> {
                     topRight: Radius.circular(12),
                   ),
                 ),
-                elevation: 10,
                 backgroundColor: kBtnColor,
-                duration: const Duration(seconds: 5),
+                elevation: 10,
+                duration: const Duration(seconds: 10),
                 content: Container(
                   height: 150,
                   child: const Center(
@@ -214,14 +191,14 @@ class _ProviderScreenState extends State<ProviderScreen> {
               ),
             );
 
-            Timer(const Duration(seconds: 5), () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ProviderRegistartion(
-                            provider: provider,
-                          )));
-            });
+            //    Timer(const Duration(seconds: 5), () {
+            //   Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //           builder: (context) => UserRegistarationScreen(
+            //                 provider: provider,
+            //               )));
+            // });
           }
         },
         btnCancelOnPress: () {},

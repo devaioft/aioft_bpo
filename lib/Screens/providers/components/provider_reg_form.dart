@@ -1,11 +1,10 @@
 import 'package:aioft_bpo/Models/user_model.dart';
-import 'package:aioft_bpo/Screens/RegistrationForm/components/custom_text_field.dart';
-import 'package:aioft_bpo/Screens/providers_screen.dart';
+import 'package:aioft_bpo/Screens/providers/providers_screen.dart';
+import 'package:aioft_bpo/Widgets/custom_text_field.dart';
 import 'package:aioft_bpo/Services/api.dart';
 import 'package:aioft_bpo/Widgets/message.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sms/flutter_sms.dart';
 
 class ProviderRegistartion extends StatefulWidget {
   const ProviderRegistartion({Key? key, this.provider}) : super(key: key);

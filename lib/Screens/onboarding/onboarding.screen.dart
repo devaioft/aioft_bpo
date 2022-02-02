@@ -1,5 +1,4 @@
-import 'package:aioft_bpo/Screens/dashboard.dart';
-import 'package:aioft_bpo/Screens/profile_screen.dart';
+import 'package:aioft_bpo/Screens/profile/profile_screen.dart';
 import 'package:aioft_bpo/Widgets/button_widget.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:flutter/material.dart';
@@ -57,10 +56,6 @@ class OnBoardingPage extends StatelessWidget {
           dotsDecorator: getDotDecoration(),
           skipFlex: 0,
           nextFlex: 0,
-          // isProgressTap: false,
-          // isProgress: false,
-          // freeze: true,
-          // animationDuration: 1000,
         ),
       );
 
@@ -70,8 +65,8 @@ class OnBoardingPage extends StatelessWidget {
 
   Widget buildImage(String path) => Center(
           child: Image.asset(
-            path,
-          ));
+        path,
+      ));
 
   DotsDecorator getDotDecoration() => DotsDecorator(
         color: const Color(0xFFBDBDBD),
@@ -84,12 +79,13 @@ class OnBoardingPage extends StatelessWidget {
       );
 
   PageDecoration getPageDecoration() => PageDecoration(
-        titleTextStyle:
-            const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-        bodyTextStyle: const TextStyle(fontSize: 20),
+        titleTextStyle: const TextStyle(
+            fontSize: 28, fontWeight: FontWeight.bold, color: kBtnColor),
+        bodyTextStyle:
+            TextStyle(fontSize: 20, color: kBtnColor.withOpacity(0.8)),
         descriptionPadding: const EdgeInsets.all(16).copyWith(bottom: 0),
         imagePadding: const EdgeInsets.all(24),
-        pageColor: Colors.white,
+        // pageColor: Colors.white,
       );
 }
 

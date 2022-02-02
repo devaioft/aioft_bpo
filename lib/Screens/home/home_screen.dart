@@ -1,5 +1,5 @@
-import 'package:aioft_bpo/Screens/fleet_screen.dart';
-import 'package:aioft_bpo/Screens/providers_screen.dart';
+import 'package:aioft_bpo/Screens/fleet/fleet_screen.dart';
+import 'package:aioft_bpo/Screens/providers/providers_screen.dart';
 import 'package:aioft_bpo/Widgets/card_widget.dart';
 import 'package:aioft_bpo/Widgets/status.dart';
 import 'package:aioft_bpo/constant.dart';
