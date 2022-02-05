@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:aioft_bpo/Models/user_model.dart';
+import 'package:aioft_bpo/Screens/dashboard/dashboard.dart';
 import 'package:aioft_bpo/Screens/fleet/components/fleet_reg_form.dart';
+import 'package:aioft_bpo/Screens/fleet/drivers/fleet_drivers_screen.dart';
 import 'package:aioft_bpo/Services/api.dart';
 import 'package:aioft_bpo/Services/preferences.dart';
 import 'package:aioft_bpo/Widgets/dialog_body.dart';
@@ -27,6 +29,10 @@ class _FleetScreenState extends State<FleetScreen> {
   var _agentPhoneNumber;
   int? userLength;
 
+  bool _loaded = false;
+  var img = Image.network("src");
+  var placeholder = AssetImage("assetName");
+
   @override
   void initState() {
     super.initState();
@@ -46,8 +52,11 @@ class _FleetScreenState extends State<FleetScreen> {
     populatesField();
     return Scaffold(
       appBar: AppBar(
-        
-        title: const Text("Fleet Users"),
+        leading: IconButton(
+            onPressed: () =>
+                Navigator.pushNamed(context, DashBoardScreen.routeName),
+            icon: const Icon(Icons.arrow_back_ios)),
+        title: const Text("All Fleet Users"),
         actions: [UserCountWidget(userLength: userLength)],
       ),
       body: FutureBuilder<Users>(
@@ -68,60 +77,46 @@ class _FleetScreenState extends State<FleetScreen> {
                           horizontal: 1, vertical: 2),
                       elevation: 0.8,
                       child: ListTile(
-                        title: Text(
-                            "${fleetUser.firstName} ${fleetUser.lastName}",
-                            style: kNameStyle),
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FleetDriversScreen(
+                                      fleet: fleetUser,
+                                    ))),
+                        title: Text("${fleetUser.fname}", style: kNameStyle),
+                        leading: fleetUser.logo == null
+                            ? const CircleAvatar(
+                                child: Image(
+                                    image: AssetImage(
+                                        'assets/images/profile.png')),
+                              )
+                            : CircleAvatar(
+                                backgroundImage: NetworkImage(fleetUser.logo),
+                              ),
                         subtitle: Padding(
                           padding: const EdgeInsets.only(bottom: 6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                fleetUser.address ?? 'No Address',
+                                fleetUser.femail ?? 'No email',
                                 style: kCityTextStyle,
-                              ),
-                              Text(
-                                fleetUser.status ?? 'No Status',
-                                style: const TextStyle(
-                                  color: kBtnColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
                               ),
                             ],
                           ),
                         ),
                         trailing: SizedBox(
-                          width: 100,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            FleetRegistartion(fleet: fleetUser),
-                                      ),
-                                    );
-                                  },
-                                  icon: const Icon(Icons.visibility_sharp)),
-                              SizedBox(
-                                height: 30,
-                                width: 45,
-                                child: OutlinedButton(
-                                  onPressed: () {
-                                    showAwesomeDialog(context, fleetUser);
-                                  },
-                                  child: const Icon(
-                                    Icons.call,
-                                    color: kBtnColor,
-                                    size: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
+                          height: 30,
+                          width: 45,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              showAwesomeDialog(context, fleetUser);
+                            },
+                            child: const Icon(
+                              Icons.call,
+                              color: kBtnColor,
+                              size: 16,
+                            ),
                           ),
                         ),
                       ),
@@ -141,7 +136,7 @@ class _FleetScreenState extends State<FleetScreen> {
         dialogType: DialogType.NO_HEADER,
         dismissOnTouchOutside: false,
         body: DialogBodyWidget(
-          dialogTitle: '${fleetUser.firstName} ${fleetUser.lastName}',
+          dialogTitle: '${fleetUser.fname}',
         ),
         customHeader: const Icon(
           Icons.call,
@@ -153,7 +148,7 @@ class _FleetScreenState extends State<FleetScreen> {
         btnOkOnPress: () {
           var data = {
             'agent_number': _agentPhoneNumber,
-            'destination_number': fleetUser.mobile,
+            'destination_number': fleetUser.fmobile,
           };
           if (_agentPhoneNumber == null) {
             message(context, 'Please Add Agent number in profile section.');
@@ -180,7 +175,7 @@ class _FleetScreenState extends State<FleetScreen> {
                   height: 150,
                   child: const Center(
                     child: Text(
-                      'Connecting...\n\nPlease Wait For Few Second Agent Will Get a Call.',
+                      'Connecting.../n/nPlease Wait For Few Second Agent Will Get a Call.',
                       style: TextStyle(
                         fontSize: 21,
                         fontWeight: FontWeight.bold,
@@ -191,12 +186,12 @@ class _FleetScreenState extends State<FleetScreen> {
               ),
             );
 
-            //    Timer(const Duration(seconds: 5), () {
+            // Timer(const Duration(seconds: 5), () {
             //   Navigator.push(
             //       context,
             //       MaterialPageRoute(
-            //           builder: (context) => UserRegistarationScreen(
-            //                 provider: provider,
+            //           builder: (context) => FleetRegistartion(
+            //                 fleetDriver: fleed,
             //               )));
             // });
           }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:aioft_bpo/Models/fleet_driver_model.dart';
 import 'package:aioft_bpo/Models/user_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,8 +18,21 @@ class CallApi {
     return usersFromJson(jsonresponse);
   }
 
+//Fetch Fleet Driver data when click on fleet data
+  Future<FleetDrivers> fetchFleetDrivers(String endsPoint, String id) async {
+    var fullUrl = baseUrl + endsPoint + id;
+    var response = await http.get(
+      Uri.parse(fullUrl),
+      headers: {'Accept': "Application/json"},
+    );
+    // final jsonresponse = json.decode(response.body);
+    // print(jsonresponse[0]);
+    // print(response.body);
+    return fleetDriversFromJson(response.body);
+  }
+
 //updatUserData
- Future<void> updateDataIntoDataBase(data, apiEndspoint, id) async {
+  Future<void> updateDataIntoDataBase(data, apiEndspoint, id) async {
     var _response = await http.post(
       Uri.parse(baseUrl + apiEndspoint + id),
       body: data,

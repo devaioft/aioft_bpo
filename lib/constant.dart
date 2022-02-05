@@ -15,7 +15,7 @@ const kNameStyle = TextStyle(
 
 const kCityTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
-  fontSize: 13.0,
+  fontSize: 12.0,
 );
 
 const kDropDownMenuStyle = TextStyle(
@@ -24,7 +24,7 @@ const kDropDownMenuStyle = TextStyle(
 );
 
 var kElevatedButtonstyle = ElevatedButton.styleFrom(
-  padding: const EdgeInsets.symmetric( vertical: 8.0),
+  padding: const EdgeInsets.symmetric(vertical: 8.0),
   primary: kBtnColor,
   textStyle: const TextStyle(
       color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),

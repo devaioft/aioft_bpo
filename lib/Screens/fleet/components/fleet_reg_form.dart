@@ -1,4 +1,6 @@
+import 'package:aioft_bpo/Models/fleet_driver_model.dart';
 import 'package:aioft_bpo/Models/user_model.dart';
+import 'package:aioft_bpo/Screens/fleet/drivers/fleet_drivers_screen.dart';
 import 'package:aioft_bpo/Widgets/custom_text_field.dart';
 import 'package:aioft_bpo/Services/api.dart';
 import 'package:aioft_bpo/Widgets/message.dart';
@@ -7,19 +9,20 @@ import 'package:flutter/material.dart';
 
 import '../fleet_screen.dart';
 
-
 class FleetRegistartion extends StatefulWidget {
-  const FleetRegistartion({Key? key, this.fleet}) : super(key: key);
+  const FleetRegistartion({
+    Key? key,
+    this.fleetDriver,
+  }) : super(key: key);
   static const routeName = "/fDetail";
 
-  final Fleet? fleet;
+  final FleetDriver? fleetDriver;
 
   @override
   _FleetRegistartionState createState() => _FleetRegistartionState();
 }
 
 class _FleetRegistartionState extends State<FleetRegistartion> {
-
   final _formKey = GlobalKey<FormState>();
   int? userid;
   final addressController = TextEditingController();
@@ -38,13 +41,13 @@ class _FleetRegistartionState extends State<FleetRegistartion> {
     super.initState();
 
     setState(() {
-      userid = widget.fleet!.id;
-      firstNameController.text = widget.fleet!.firstName ?? '';
-      lastNameController.text = widget.fleet!.lastName ?? '';
+      userid = widget.fleetDriver!.id;
+      firstNameController.text = widget.fleetDriver!.firstName ?? '';
+      lastNameController.text = widget.fleetDriver!.lastName ?? '';
 
-      addressController.text = widget.fleet!.address ?? 'Bangalore';
-      phoneController.text = widget.fleet!.mobile ?? '';
-      pincodeController.text = widget.fleet!.pinCode ?? '123456';
+      addressController.text = widget.fleetDriver!.address ?? 'Bangalore';
+      phoneController.text = widget.fleetDriver!.mobile ?? '';
+      pincodeController.text = widget.fleetDriver!.postalCode ?? '123456';
       _userTypeValue = items[0];
     });
   }
@@ -54,11 +57,10 @@ class _FleetRegistartionState extends State<FleetRegistartion> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const FleetScreen())),
+          onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios),
         ),
-        title: Text(widget.fleet!.firstName!),
+        title: Text(widget.fleetDriver!.firstName!),
       ),
       body: SafeArea(
         child: ListView(
@@ -214,8 +216,7 @@ class _FleetRegistartionState extends State<FleetRegistartion> {
       'description': ''
     };
 
-    CallApi()
-        .updateDataIntoDataBase(data, '/fleet_update/', userid.toString());
+    CallApi().updateDataIntoDataBase(data, '/fleet_update/', userid.toString());
   }
 
   // void _sendSMS(String message, List<String> recipents) async {

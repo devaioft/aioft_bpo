@@ -2,6 +2,7 @@
 //
 //     final users = usersFromJson(jsonString);
 
+
 Users usersFromJson(dynamic str) => Users.fromJson(str);
 
 class Users {
@@ -22,64 +23,25 @@ class Users {
 
 class Fleet {
   Fleet({
-    this.id,
-    this.name,
-    this.email,
-    this.mobile,
+    this.fid,
+    this.fname,
+    this.femail,
+    this.fmobile,
     this.logo,
-    this.firstName,
-    this.lastName,
-    this.avatar,
-    this.serviceNumber,
-    this.serviceModel,
-    this.address,
-    this.addressSecondary,
-    this.city,
-    this.country,
-    this.documentId,
-    this.url,
-    this.status,
-    this.pinCode,
   });
 
-  int? id;
-  dynamic name;
-  String? email;
-  String? mobile;
+  int? fid;
+  String? fname;
+  String? femail;
+  String? fmobile;
   dynamic logo;
-  String? firstName;
-  String? lastName;
-  String? avatar;
-  String? serviceNumber;
-  String? serviceModel;
-  String? address;
-  String? addressSecondary;
-  String? city;
-  String? country;
-  String? documentId;
-  String? url;
-  String? status;
-  String? pinCode;
 
   factory Fleet.fromJson(Map<String, dynamic> json) => Fleet(
-        id: json['id'],
-        name: json["name"],
-        email: json["email"],
-        mobile: json["mobile"],
+        fid: json["fid"],
+        fname: json["fname"],
+        femail: json["femail"],
+        fmobile: json["fmobile"],
         logo: json["logo"],
-        firstName: json["first_name"],
-        lastName: json["last_name"],
-        avatar: json["avatar"],
-        serviceNumber: json["service_number"],
-        serviceModel: json["service_model"],
-        address: json["address"],
-        addressSecondary: json["address_secondary"],
-        city: json["city"],
-        country: json["country"],
-        documentId: json["document_id"],
-        url: json["url"],
-        status: json["status"],
-        pinCode: json['postal_code'],
       );
 }
 
