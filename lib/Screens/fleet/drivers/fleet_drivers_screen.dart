@@ -62,84 +62,84 @@ class _FleetDriversScreenState extends State<FleetDriversScreen> {
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Center(
-                child: Text("${snapshot.error}"),
+                child: Text(" No Data : ${snapshot.error}"),
+              );
+            } else if (!snapshot.hasData) {
+              return const Center(
+                child: Text("No Data"),
               );
             } else if (snapshot.hasData) {
-              if (snapshot.data!.fleet!.length < 0) {
-                return Center(child: Text("No Data"));
-              } else {
-                userLength = snapshot.data!.fleet!.length;
-                return ListView.builder(
-                    itemCount: snapshot.data!.fleet?.length,
-                    itemBuilder: (context, index) {
-                      final fleetDriver = snapshot.data!.fleet![index];
-                      return Card(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 1, vertical: 2),
-                        elevation: 0.8,
-                        child: ListTile(
-                          leading: fleetDriver.avatar == null
-                              ? const CircleAvatar(
-                                  child: Image(
-                                      image: AssetImage(
-                                          'assets/images/profile.png')),
-                                )
-                              : CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(fleetDriver.avatar!),
-                                ),
-                          title: Text(
-                              "${fleetDriver.firstName} ${fleetDriver.lastName}",
-                              style: kNameStyle),
-                          subtitle: Padding(
-                            padding: const EdgeInsets.only(bottom: 6),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  fleetDriver.address ?? 'No Address',
-                                  style: kCityTextStyle,
-                                ),
-                              ],
-                            ),
-                          ),
-                          trailing: SizedBox(
-                            width: 100,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              FleetRegistartion(fleetDriver: fleetDriver),
-                                        ),
-                                      );
-                                    },
-                                    icon: const Icon(Icons.visibility_sharp)),
-                                SizedBox(
-                                  height: 30,
-                                  width: 45,
-                                  child: OutlinedButton(
-                                    onPressed: () {
-                                      showAwesomeDialog(context, fleetDriver);
-                                    },
-                                    child: const Icon(
-                                      Icons.call,
-                                      color: kBtnColor,
-                                      size: 16,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+              userLength = snapshot.data!.fleet!.length;
+              return ListView.builder(
+                  itemCount: snapshot.data!.fleet?.length,
+                  itemBuilder: (context, index) {
+                    final fleetDriver = snapshot.data!.fleet![index];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 1, vertical: 2),
+                      elevation: 0.8,
+                      child: ListTile(
+                        leading: fleetDriver.avatar == null
+                            ? const CircleAvatar(
+                                child: Image(
+                                    image: AssetImage(
+                                        'assets/images/profile.png')),
+                              )
+                            : CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(fleetDriver.avatar!),
+                              ),
+                        title: Text(
+                            "${fleetDriver.firstName} ${fleetDriver.lastName}",
+                            style: kNameStyle),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(bottom: 6),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                fleetDriver.address ?? 'No Address',
+                                style: kCityTextStyle,
+                              ),
+                            ],
                           ),
                         ),
-                      );
-                    });
-              }
+                        trailing: SizedBox(
+                          width: 100,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => FleetRegistartion(
+                                            fleetDriver: fleetDriver),
+                                      ),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.visibility_sharp)),
+                              SizedBox(
+                                height: 30,
+                                width: 45,
+                                child: OutlinedButton(
+                                  onPressed: () {
+                                    showAwesomeDialog(context, fleetDriver);
+                                  },
+                                  child: const Icon(
+                                    Icons.call,
+                                    color: kBtnColor,
+                                    size: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  });
             } else {
               return const Center(child: CircularProgressIndicator());
             }
@@ -205,14 +205,14 @@ class _FleetDriversScreenState extends State<FleetDriversScreen> {
               ),
             );
 
-            // Timer(const Duration(seconds: 5), () {
-            //   Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //           builder: (context) => FleetRegistartion(
-            //                 fleet: fleetUser,
-            //               )));
-            // });
+            Timer(const Duration(seconds: 5), () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FleetRegistartion(
+                           fleetDriver: fleetDriver,
+                          )));
+            });
           }
         },
         btnCancelOnPress: () {},

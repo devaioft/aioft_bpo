@@ -23,6 +23,7 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
 
   final _formKey = GlobalKey<FormState>();
   int? userid;
+  
   final addressController = TextEditingController();
   final phoneController = TextEditingController();
   final firstNameController = TextEditingController();
@@ -131,7 +132,7 @@ class _ProviderRegistartionState extends State<ProviderRegistartion> {
                   CustomTextFormField(
                     controller: phoneController,
                     hintText: "phone no",
-                    readMode: false,
+                    readMode: true,
                     keyboardType: TextInputType.phone,
                     errorMessage: "Please Enter the last name",
                   ),

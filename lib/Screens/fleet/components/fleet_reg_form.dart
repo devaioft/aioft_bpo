@@ -1,13 +1,9 @@
 import 'package:aioft_bpo/Models/fleet_driver_model.dart';
-import 'package:aioft_bpo/Models/user_model.dart';
-import 'package:aioft_bpo/Screens/fleet/drivers/fleet_drivers_screen.dart';
 import 'package:aioft_bpo/Widgets/custom_text_field.dart';
 import 'package:aioft_bpo/Services/api.dart';
 import 'package:aioft_bpo/Widgets/message.dart';
 import 'package:aioft_bpo/constant.dart';
 import 'package:flutter/material.dart';
-
-import '../fleet_screen.dart';
 
 class FleetRegistartion extends StatefulWidget {
   const FleetRegistartion({
@@ -132,7 +128,7 @@ class _FleetRegistartionState extends State<FleetRegistartion> {
                   CustomTextFormField(
                     controller: phoneController,
                     hintText: "phone no",
-                    readMode: false,
+                    readMode: true,
                     keyboardType: TextInputType.phone,
                     errorMessage: "Please Enter the last name",
                   ),
@@ -216,7 +212,8 @@ class _FleetRegistartionState extends State<FleetRegistartion> {
       'description': ''
     };
 
-    CallApi().updateDataIntoDataBase(data, '/fleet_update/', userid.toString());
+    CallApi()
+        .updateDataIntoDataBase(data, '/provider_update/', userid.toString());
   }
 
   // void _sendSMS(String message, List<String> recipents) async {

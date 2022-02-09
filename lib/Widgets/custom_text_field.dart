@@ -6,7 +6,7 @@ class CustomTextFormField extends StatelessWidget {
     this.hintText,
     this.errorMessage,
     this.keyboardType,
-    required this.readMode,
+    required this.readMode,      
     // this.initialValue,
     this.onChanged,
     this.controller,
@@ -26,6 +26,11 @@ class CustomTextFormField extends StatelessWidget {
       controller: controller,
       onChanged: onChanged,
       // initialValue: initialValue,
+      style: readMode == true
+          ? TextStyle(
+              background: Paint(),
+            )
+          : null,
       readOnly: readMode,
       keyboardType: keyboardType,
       decoration: InputDecoration(
